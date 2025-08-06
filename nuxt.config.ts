@@ -1,15 +1,18 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
 
-  tailwindcss: {
-    exposeConfig: true,
-    viewer: true,
-  },
-
   routeRules: {
     '/': { redirect: '/portfolio' }
+  },
+
+  css: ['~/assets/css/main.css'],
+  vite: {
+    plugins: [
+        tailwindcss(),
+    ]
   },
 
   modules: [
@@ -17,6 +20,5 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/icon',
     '@nuxt/fonts',
-    '@nuxtjs/tailwindcss'
   ]
 })
