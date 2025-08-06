@@ -1,7 +1,6 @@
 <template>
     <div class="overflow-hidden w-screen h-screen relative">
         <UniversalHeader />
-
         <div
               ref="carousel"
               class="carousel w-full h-full flex overflow-x-scroll scroll-smooth snap-x snap-mandatory"
@@ -24,49 +23,59 @@
             </div>
         </div>
 
-        <div class="fixed top-1/2 -translate-y-1/2 right-11 flex flex-col gap-2 py-2">
+        <div class="fixed bottom-14 right-14 flex flex-col gap-2 py-2">
             <button
                   v-for="(slide, i) in slides"
                   :key="i"
                   @click="goTo(i)"
                   :class="[
           'text-lg text-right cursor-pointer',
-          activeIndex === i ? 'text-base-100' : 'text-base-100/30'
+          activeIndex === i ? 'text-base-100' : 'text-base-100/50'
         ]"
             >
                 {{ slide.title }}
             </button>
         </div>
 
-        <h1 class="fixed bottom-11 left-11 text-white text-7xl">
-            {{ currentSlide.title }}
-        </h1>
-        <div class="fixed bottom-11 right-11 flex gap-2">
-            <NuxtLink
-                  v-if="currentSlide.siteUrl"
-                  :to="currentSlide.siteUrl"
-                  external
-            >
-                <GlassButton>
-                    Visiter le site <Icon name="lucide:external-link" />
-                </GlassButton>
-            </NuxtLink>
-            <NuxtLink
-                  v-if="currentSlide.projectUrl"
-                  :to="currentSlide.projectUrl"
-            >
-                <GlassButton>Voir le projet</GlassButton>
-            </NuxtLink>
+        <div class="fixed w-1/2 bottom-14 left-14 text-white gap-5 flex flex-col">
+            <h1
+                  ref="titleRef"
+                  class="text-7xl whitespace-pre"
+            ></h1>
+            <p class="w-full">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum convallis ante, sit amet fringilla dolor dictum in. Nulla facilisi. Proin sodales ullamcorper dignissim. Sed pharetra et lectus ut auctor. Duis nec neque ullamcorper, placerat urna vel, sagittis ipsum. Pellentesque volutpat massa quis justo elementum, vitae feugiat erat congue. Morbi quis porta ex.
+            </p>
+
+            <div class="flex gap-2">
+                <NuxtLink
+                      v-if="currentSlide?.siteUrl"
+                      :to="currentSlide.siteUrl"
+                      external
+                >
+                    <GlassButton>
+                        Visiter le site <Icon name="lucide:external-link" />
+                    </GlassButton>
+                </NuxtLink>
+                <NuxtLink
+                      v-if="currentSlide?.projectUrl"
+                      :to="currentSlide.projectUrl"
+                >
+                    <GlassButton>Voir le projet</GlassButton>
+                </NuxtLink>
+            </div>
         </div>
+
+
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import gsap from 'gsap'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 
-gsap.registerPlugin(ScrollToPlugin)
+gsap.registerPlugin(ScrollToPlugin, ScrambleTextPlugin)
 
 interface Slide {
     title: string
@@ -95,22 +104,48 @@ const slides: Slide[] = [
         projectUrl: '/projets/afc-landes',
         darken: true,
         darkenValue: 0.2
+    },
+    {
+        title: 'Coligny Paris',
+        imageSrc: 'https://www.coligny-paris.com/wp-content/uploads/2023/10/Images-for-beautiful-people-and-tribe-3.png',
+        alt: 'Une petite fille regardant par la fenêtre',
+        siteUrl: 'https://www.coligny-paris.com/fr/',
+        projectUrl: '/projets/coligny-paris',
+        darken: true,
+        darkenValue: 0.2
+    },
+    {
+        title: 'Draner.com',
+        imageSrc: 'https://img.freepik.com/photos-premium/cote-profil-photo-fille-focalisee-developpeur-logiciels-verre-ecran-ordinateur-look-espresso_274222-22774.jpg',
+        alt: 'Une femme focalisée sur son ordinateur, un café en main',
+        siteUrl: 'https://www.draner.com/',
+        projectUrl: '/projets/draner-com',
+        darken: true,
+        darkenValue: 0.3
     }
 ]
 
-const carousel = ref<HTMLElement | null>(null)
+const carousel = ref<HTMLElement>()
+const titleRef = ref<HTMLElement>()
 const activeIndex = ref(0)
-const currentSlide = computed(() => slides[activeIndex.value]!)
 
-function updateActive() {
+const currentSlide = computed(() => slides[activeIndex.value] || null)
+
+const updateActive = (): void => {
     if (!carousel.value) return
-    const width = carousel.value.clientWidth
-    activeIndex.value = Math.round(carousel.value.scrollLeft / width)
+
+    const { clientWidth, scrollLeft } = carousel.value
+    const newIndex = Math.round(scrollLeft / clientWidth)
+
+    if (newIndex !== activeIndex.value) {
+        activeIndex.value = newIndex
+    }
 }
 
-function goTo(i: number) {
-    if (!carousel.value) return
-    const x = carousel.value.clientWidth * i
+const goTo = (index: number): void => {
+    if (!carousel.value || index < 0 || index >= slides.length) return
+
+    const x = carousel.value.clientWidth * index
     gsap.to(carousel.value, {
         scrollTo: { x },
         duration: 0.5,
@@ -118,18 +153,76 @@ function goTo(i: number) {
     })
 }
 
+let scrollAccumulator = 0
+let isScrolling = false
+
+const handleWheel = (event: WheelEvent): void => {
+    event.preventDefault()
+
+    if (isScrolling) return
+
+    const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY
+    scrollAccumulator += delta
+
+    const threshold = 150
+
+    if (Math.abs(scrollAccumulator) >= threshold) {
+        isScrolling = true
+
+        if (scrollAccumulator > 0 && activeIndex.value < slides.length - 1) {
+            goTo(activeIndex.value + 1)
+        } else if (scrollAccumulator < 0 && activeIndex.value > 0) {
+            goTo(activeIndex.value - 1)
+        }
+
+        scrollAccumulator = 0
+
+        setTimeout(() => {
+            isScrolling = false
+        }, 600)
+    }
+}
+
+const animateTitle = (text: string): void => {
+    if (!titleRef.value) return
+
+    gsap.to(titleRef.value, {
+        duration: 1,
+        ease: 'power1.out',
+        scrambleText: {
+            text,
+            chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz',
+            revealDelay: 0.3,
+            speed: 0.5
+        }
+    })
+}
+
+watch(activeIndex, async () => {
+    await nextTick()
+    const slide = currentSlide.value
+    if (slide) {
+        animateTitle(slide.title)
+    }
+})
+
 onMounted(() => {
     updateActive()
     carousel.value?.addEventListener('scroll', updateActive, { passive: true })
+    window.addEventListener('wheel', handleWheel, { passive: false })
+
+    const slide = currentSlide.value
+    if (slide) {
+        animateTitle(slide.title)
+    }
 })
 
 onUnmounted(() => {
     carousel.value?.removeEventListener('scroll', updateActive)
+    window.removeEventListener('wheel', handleWheel)
 })
 
-definePageMeta({
-    prerender: true
-})
+definePageMeta({ prerender: true })
 </script>
 
 <style>
