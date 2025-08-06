@@ -1,5 +1,5 @@
 <template>
-    <div>Hello</div>
+    <UniversalHeader />
 </template>
 
 <script setup lang="ts">

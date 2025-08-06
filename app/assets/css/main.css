@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+    --font-display: "Hanken Grotesk", "sans-serif";
+}
+
+
+html {
+    font-family: var(--font-display);
+}
