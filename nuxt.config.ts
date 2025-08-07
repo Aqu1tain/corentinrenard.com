@@ -15,6 +15,16 @@ export default defineNuxtConfig({
     ]
   },
 
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: 'github-dark'
+        }
+      }
+    }
+  },
+
   modules: [
     '@nuxt/content',
     '@nuxt/image',

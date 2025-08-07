@@ -7,7 +7,14 @@ export default defineContentConfig({
             source: 'blog/*.md',
             schema: z.object({
                 date: z.date(),
+                title: z.string(),
                 description: z.string(),
+                tags: z.array(z.string()).optional(),
+                author: z.string().optional().default('Corentin Renard'),
+                featured: z.boolean().optional().default(false),
+                draft: z.boolean().optional().default(false),
+                image: z.string().optional(),
+                readingTime: z.number().optional(),
             })
         })
     }
