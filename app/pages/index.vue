@@ -83,7 +83,7 @@ const onMediaChange = (e: MediaQueryListEvent) => {
     <main class="max-w-3xl mx-auto px-6 py-24 sm:py-32">
       <section class="text-center mb-24">
         <img
-          src="https://www.zoologiste.com/images/main/capybara-ia.jpg"
+          src="/apple-touch-icon.png"
           alt="Corentin Renard"
           class="w-36 h-36 rounded-full mx-auto mb-8 object-cover ring-4 ring-neutral-100 dark:ring-neutral-700"
         />
