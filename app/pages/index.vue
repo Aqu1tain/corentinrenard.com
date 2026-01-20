@@ -11,12 +11,12 @@ const toggleLocale = () => {
 }
 
 const socials = [
-  { icon: 'mdi:instagram', href: '#', label: 'Instagram' },
-  { icon: 'mdi:github', href: '#', label: 'GitHub' },
-  { icon: 'mdi:discord', href: '#', label: 'Discord' },
+  { icon: 'mdi:instagram', href: 'https://www.instagram.com/corentin_fox/', label: 'Instagram' },
+  { icon: 'mdi:github', href: 'https://github.com/Aqu1tain', label: 'GitHub' },
+  { icon: 'mdi:discord', href: 'https://discord.com/users/Akitain', label: 'Discord' },
   { icon: 'mdi:email', href: 'mailto:contact@corentinrenard.com', label: 'Email' },
-  { icon: 'mdi:linkedin', href: '#', label: 'LinkedIn' },
-  { icon: 'mdi:behance', href: '#', label: 'Behance' },
+  { icon: 'mdi:linkedin', href: 'https://www.linkedin.com/in/corentin-renard-web/', label: 'LinkedIn' },
+  { icon: 'mdi:behance', href: 'https://www.behance.net/corentin_fox', label: 'Behance' },
 ]
 
 const workflowSteps = ['design', 'integration', 'maintenance'] as const

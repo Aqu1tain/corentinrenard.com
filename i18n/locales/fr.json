@@ -25,15 +25,15 @@
     "types": {
       "landing": {
         "title": "Landing Page",
-        "price": "À partir de 500"
+        "price": "À partir de 900"
       },
       "showcase": {
         "title": "Site Vitrine",
-        "price": "À partir de 1500"
+        "price": "À partir de 2500"
       },
       "ecommerce": {
         "title": "E-commerce",
-        "price": "À partir de 3000"
+        "price": "À partir de 4500"
       },
       "custom": {
         "title": "Projet Sur Mesure",

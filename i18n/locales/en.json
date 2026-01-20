@@ -25,15 +25,15 @@
     "types": {
       "landing": {
         "title": "Landing Page",
-        "price": "From 500"
+        "price": "From 900"
       },
       "showcase": {
         "title": "Showcase Website",
-        "price": "From 1500"
+        "price": "From 2500"
       },
       "ecommerce": {
         "title": "E-commerce",
-        "price": "From 3000"
+        "price": "From 4500"
       },
       "custom": {
         "title": "Custom Project",
