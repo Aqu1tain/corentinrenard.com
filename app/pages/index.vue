@@ -32,6 +32,13 @@ const workflowSteps = [
   { key: 'integration', icon: 'mdi:code-braces' },
   { key: 'maintenance', icon: 'mdi:wrench-outline' },
 ] as const
+
+const isDesktop = ref(false)
+onMounted(() => {
+  const mediaQuery = window.matchMedia('(min-width: 640px)')
+  isDesktop.value = mediaQuery.matches
+  mediaQuery.addEventListener('change', (e) => isDesktop.value = e.matches)
+})
 const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 </script>
 
@@ -55,7 +62,7 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
       </button>
     </header>
 
-    <main class="max-w-2xl mx-auto px-6 py-24 sm:py-32">
+    <main class="max-w-3xl mx-auto px-6 py-24 sm:py-32">
       <section class="text-center mb-24">
         <img
           src="https://www.zoologiste.com/images/main/capybara-ia.jpg"
@@ -74,19 +81,19 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             target="_blank"
             rel="noopener noreferrer"
             :aria-label="social.label"
-            class="social-link hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            class="relative w-12 h-12 flex items-center justify-center rounded-xl transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
             @mouseenter="hoveredSocial = social.label"
             @mouseleave="hoveredSocial = null"
           >
             <Icon :name="social.icon" size="24" />
             <span
-              class="social-tooltip bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
-              :class="{ 'opacity-100 translate-y-0': hoveredSocial === social.label }"
+              class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-none transition-all bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
+              :class="hoveredSocial === social.label ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'"
             >{{ social.label }}</span>
           </a>
           <button
             aria-label="Discord"
-            class="social-link cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            class="relative w-12 h-12 flex items-center justify-center rounded-xl cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
             @click="copyDiscord"
             @mouseenter="hoveredSocial = 'Discord'"
             @mouseleave="hoveredSocial = null"
@@ -96,8 +103,8 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
               <Icon v-else key="discord" name="mdi:discord" size="24" />
             </Transition>
             <span
-              class="social-tooltip bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
-              :class="{ 'opacity-100 translate-y-0': hoveredSocial === 'Discord' || discordCopied }"
+              class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-none transition-all bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
+              :class="hoveredSocial === 'Discord' || discordCopied ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'"
             >{{ discordCopied ? 'Copied!' : 'Discord' }}</span>
           </button>
           <a
@@ -107,14 +114,14 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             target="_blank"
             rel="noopener noreferrer"
             :aria-label="social.label"
-            class="social-link hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            class="relative w-12 h-12 flex items-center justify-center rounded-xl transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
             @mouseenter="hoveredSocial = social.label"
             @mouseleave="hoveredSocial = null"
           >
             <Icon :name="social.icon" size="24" />
             <span
-              class="social-tooltip bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
-              :class="{ 'opacity-100 translate-y-0': hoveredSocial === social.label }"
+              class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-none transition-all bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
+              :class="hoveredSocial === social.label ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'"
             >{{ social.label }}</span>
           </a>
         </div>
@@ -122,26 +129,38 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 
       <section class="mb-24">
         <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('workflow.title') }}</h2>
-        <div class="grid sm:grid-cols-3 gap-6">
-          <div
-            v-for="(step, index) in workflowSteps"
-            :key="step.key"
-            class="relative p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 group hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors"
-          >
+        <div class="space-y-2 sm:space-y-0 sm:flex sm:items-center sm:gap-2">
+          <div class="flex-1 p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors">
             <div class="flex items-center gap-3 mb-4">
-              <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold">
-                {{ index + 1 }}
-              </span>
-              <Icon :name="step.icon" size="24" class="text-neutral-400 dark:text-neutral-500" />
+              <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">1</span>
+              <Icon name="mdi:palette-outline" size="24" class="text-neutral-400 dark:text-neutral-500" />
             </div>
-            <h3 class="font-semibold mb-2">{{ t(`workflow.steps.${step.key}.title`) }}</h3>
-            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t(`workflow.steps.${step.key}.description`) }}</p>
-            <div v-if="index < workflowSteps.length - 1" class="sm:hidden absolute left-1/2 -bottom-4 -translate-x-1/2">
-              <Icon name="mdi:chevron-down" size="20" class="text-neutral-400 dark:text-neutral-500" />
+            <h3 class="font-semibold mb-2">{{ t('workflow.steps.design.title') }}</h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t('workflow.steps.design.description') }}</p>
+          </div>
+          <div class="flex justify-center py-1 sm:py-0 sm:px-1">
+            <Icon v-show="!isDesktop" name="mdi:chevron-down" size="20" class="text-neutral-400 dark:text-neutral-500" />
+            <Icon v-show="isDesktop" name="mdi:chevron-right" size="20" class="text-neutral-400 dark:text-neutral-500" />
+          </div>
+          <div class="flex-1 p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">2</span>
+              <Icon name="mdi:code-braces" size="24" class="text-neutral-400 dark:text-neutral-500" />
             </div>
-            <div v-if="index < workflowSteps.length - 1" class="hidden sm:block absolute left-full top-1/2 -translate-y-1/2 translate-x-[2px]">
-              <Icon name="mdi:chevron-right" size="20" class="text-neutral-400 dark:text-neutral-500" />
+            <h3 class="font-semibold mb-2">{{ t('workflow.steps.integration.title') }}</h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t('workflow.steps.integration.description') }}</p>
+          </div>
+          <div class="flex justify-center py-1 sm:py-0 sm:px-1">
+            <Icon v-show="!isDesktop" name="mdi:chevron-down" size="20" class="text-neutral-400 dark:text-neutral-500" />
+            <Icon v-show="isDesktop" name="mdi:chevron-right" size="20" class="text-neutral-400 dark:text-neutral-500" />
+          </div>
+          <div class="flex-1 p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">3</span>
+              <Icon name="mdi:wrench-outline" size="24" class="text-neutral-400 dark:text-neutral-500" />
             </div>
+            <h3 class="font-semibold mb-2">{{ t('workflow.steps.maintenance.title') }}</h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t('workflow.steps.maintenance.description') }}</p>
           </div>
         </div>
       </section>
@@ -187,39 +206,6 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 </template>
 
 <style scoped>
-.social-link {
-  position: relative;
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.75rem;
-  transition: background-color 0.15s;
-}
-
-.social-tooltip {
-  position: absolute;
-  bottom: -2rem;
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.15s ease;
-}
-
-.social-tooltip.opacity-100 {
-  opacity: 1;
-}
-
-.social-tooltip.translate-y-0 {
-  transform: translateX(-50%) translateY(0);
-}
-
 .icon-swap-enter-active,
 .icon-swap-leave-active {
   transition: all 0.2s ease;
