@@ -1,0 +1,9 @@
+services:
+  app:
+    image: ghcr.io/aqu1tain/corentinrenard.com:latest
+    container_name: corentinrenard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
