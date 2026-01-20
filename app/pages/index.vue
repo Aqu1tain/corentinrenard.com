@@ -69,33 +69,28 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             v-for="social in socials.slice(0, 2)"
             :key="social.label"
             :href="social.href"
+            :title="social.label"
             :aria-label="social.label"
             class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
           >
             <Icon :name="social.icon" size="24" />
           </a>
           <button
+            :title="discordCopied ? 'Copied!' : 'Discord'"
             aria-label="Discord"
-            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors relative group"
+            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
             @click="copyDiscord"
           >
             <Transition name="icon-swap" mode="out-in">
               <Icon v-if="discordCopied" key="check" name="mdi:check" size="24" class="text-green-500" />
               <Icon v-else key="discord" name="mdi:discord" size="24" />
             </Transition>
-            <Transition name="tooltip">
-              <span
-                v-if="discordCopied"
-                class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900 px-2 py-1 rounded whitespace-nowrap"
-              >
-                Copied!
-              </span>
-            </Transition>
           </button>
           <a
             v-for="social in socials.slice(2)"
             :key="social.label"
             :href="social.href"
+            :title="social.label"
             :aria-label="social.label"
             class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
           >
@@ -120,12 +115,12 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             </div>
             <h3 class="font-semibold mb-2">{{ t(`workflow.steps.${step.key}.title`) }}</h3>
             <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t(`workflow.steps.${step.key}.description`) }}</p>
-            <Icon
-              v-if="index < workflowSteps.length - 1"
-              name="mdi:chevron-right"
-              size="20"
-              class="hidden sm:block absolute left-full top-1/2 -translate-y-1/2 translate-x-[2px] text-neutral-400 dark:text-neutral-500"
-            />
+            <div v-if="index < workflowSteps.length - 1" class="sm:hidden absolute left-1/2 -bottom-4 -translate-x-1/2">
+              <Icon name="mdi:chevron-down" size="20" class="text-neutral-400 dark:text-neutral-500" />
+            </div>
+            <div v-if="index < workflowSteps.length - 1" class="hidden sm:block absolute left-full top-1/2 -translate-y-1/2 translate-x-[2px]">
+              <Icon name="mdi:chevron-right" size="20" class="text-neutral-400 dark:text-neutral-500" />
+            </div>
           </div>
         </div>
       </section>
@@ -140,7 +135,7 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             class="p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
           >
             <h3 class="font-semibold text-neutral-600 dark:text-neutral-400 mb-2">{{ t(`pricing.types.${type}.title`) }}</h3>
-            <p class="text-2xl font-display">{{ t(`pricing.types.${type}.price`) }}<span v-if="type !== 'custom'" class="text-base font-sans text-neutral-400 dark:text-neutral-500 ml-0.5">&euro;</span></p>
+            <p class="text-2xl font-semibold">{{ t(`pricing.types.${type}.price`) }}<span v-if="type !== 'custom'" class="text-base font-normal text-neutral-400 dark:text-neutral-500 ml-0.5">&euro;</span></p>
           </div>
         </div>
       </section>
