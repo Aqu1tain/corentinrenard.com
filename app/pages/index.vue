@@ -192,7 +192,9 @@ const onMediaChange = (e: MediaQueryListEvent) => {
           />
           <button v-else class="video-facade" @click="showVideo = true">
             <img src="/interview-thumbnail.png" alt="Interview thumbnail" class="w-full h-full object-cover" />
-            <Icon name="mdi:youtube" size="80" class="video-play-btn" />
+            <span class="video-play-btn">
+              <Icon name="logos:youtube-icon" size="56" />
+            </span>
           </button>
         </div>
       </section>
@@ -306,12 +308,10 @@ const onMediaChange = (e: MediaQueryListEvent) => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #ff0000;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
   transition: transform 0.15s;
 }
 
 .video-facade:hover .video-play-btn {
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: translate(-50%, -50%) scale(1.05);
 }
 </style>
