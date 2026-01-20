@@ -13,33 +13,51 @@ const toggleLocale = () => {
 const socials = [
   { icon: 'mdi:instagram', href: 'https://www.instagram.com/corentin_fox/', label: 'Instagram' },
   { icon: 'mdi:github', href: 'https://github.com/Aqu1tain', label: 'GitHub' },
+  { icon: 'mdi:discord', label: 'Discord', action: 'copy', value: 'Akitain' },
   { icon: 'mdi:email', href: 'mailto:contact@corentinrenard.com', label: 'Email' },
   { icon: 'mdi:linkedin', href: 'https://www.linkedin.com/in/corentin-renard-web/', label: 'LinkedIn' },
   { icon: 'mdi:behance', href: 'https://www.behance.net/corentin_fox', label: 'Behance' },
 ]
 
-const discordCopied = ref(false)
-const copyDiscord = async () => {
-  await navigator.clipboard.writeText('Akitain')
-  discordCopied.value = true
-  setTimeout(() => discordCopied.value = false, 2000)
+const copiedSocial = ref<string | null>(null)
+const handleSocialClick = async (social: typeof socials[number]) => {
+  if (social.action !== 'copy' || !social.value) return
+  await navigator.clipboard.writeText(social.value)
+  copiedSocial.value = social.label
+  setTimeout(() => copiedSocial.value = null, 2000)
 }
 
 const hoveredSocial = ref<string | null>(null)
+const isTooltipVisible = (label: string) => hoveredSocial.value === label || copiedSocial.value === label
+const getTooltipText = (social: typeof socials[number]) => {
+  if (copiedSocial.value === social.label) return 'Copied!'
+  return social.label
+}
 
 const workflowSteps = [
   { key: 'design', icon: 'mdi:palette-outline' },
   { key: 'integration', icon: 'mdi:code-braces' },
   { key: 'maintenance', icon: 'mdi:wrench-outline' },
-] as const
+]
+
+const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 
 const isDesktop = ref(false)
+let mediaQuery: MediaQueryList | null = null
+
 onMounted(() => {
-  const mediaQuery = window.matchMedia('(min-width: 640px)')
+  mediaQuery = window.matchMedia('(min-width: 640px)')
   isDesktop.value = mediaQuery.matches
-  mediaQuery.addEventListener('change', (e) => isDesktop.value = e.matches)
+  mediaQuery.addEventListener('change', onMediaChange)
 })
-const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
+
+onUnmounted(() => {
+  mediaQuery?.removeEventListener('change', onMediaChange)
+})
+
+const onMediaChange = (e: MediaQueryListEvent) => {
+  isDesktop.value = e.matches
+}
 </script>
 
 <template>
@@ -74,94 +92,52 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
         <p class="text-sm text-neutral-400 dark:text-neutral-600 italic">{{ t('avatarJoke') }}</p>
 
         <div class="flex justify-center gap-2 mt-10">
-          <a
-            v-for="social in socials.slice(0, 2)"
+          <component
+            :is="social.href ? 'a' : 'button'"
+            v-for="social in socials"
             :key="social.label"
             :href="social.href"
-            target="_blank"
-            rel="noopener noreferrer"
+            :target="social.href ? '_blank' : undefined"
+            :rel="social.href ? 'noopener noreferrer' : undefined"
             :aria-label="social.label"
-            class="relative w-12 h-12 flex items-center justify-center rounded-xl transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            class="social-btn"
+            @click="handleSocialClick(social)"
             @mouseenter="hoveredSocial = social.label"
             @mouseleave="hoveredSocial = null"
           >
-            <Icon :name="social.icon" size="24" />
-            <span
-              class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-none transition-all bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
-              :class="hoveredSocial === social.label ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'"
-            >{{ social.label }}</span>
-          </a>
-          <button
-            aria-label="Discord"
-            class="relative w-12 h-12 flex items-center justify-center rounded-xl cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            @click="copyDiscord"
-            @mouseenter="hoveredSocial = 'Discord'"
-            @mouseleave="hoveredSocial = null"
-          >
-            <Transition name="icon-swap" mode="out-in">
-              <Icon v-if="discordCopied" key="check" name="mdi:check" size="24" class="text-green-500" />
-              <Icon v-else key="discord" name="mdi:discord" size="24" />
+            <Transition v-if="social.action === 'copy'" name="icon-swap" mode="out-in">
+              <Icon v-if="copiedSocial === social.label" key="check" name="mdi:check" size="24" class="text-green-500" />
+              <Icon v-else key="icon" :name="social.icon" size="24" />
             </Transition>
-            <span
-              class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-none transition-all bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
-              :class="hoveredSocial === 'Discord' || discordCopied ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'"
-            >{{ discordCopied ? 'Copied!' : 'Discord' }}</span>
-          </button>
-          <a
-            v-for="social in socials.slice(2)"
-            :key="social.label"
-            :href="social.href"
-            target="_blank"
-            rel="noopener noreferrer"
-            :aria-label="social.label"
-            class="relative w-12 h-12 flex items-center justify-center rounded-xl transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
-            @mouseenter="hoveredSocial = social.label"
-            @mouseleave="hoveredSocial = null"
-          >
-            <Icon :name="social.icon" size="24" />
-            <span
-              class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-none transition-all bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
-              :class="hoveredSocial === social.label ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'"
-            >{{ social.label }}</span>
-          </a>
+            <Icon v-else :name="social.icon" size="24" />
+            <span class="social-tooltip" :class="{ visible: isTooltipVisible(social.label) }">
+              {{ getTooltipText(social) }}
+            </span>
+          </component>
         </div>
       </section>
 
       <section class="mb-24">
         <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('workflow.title') }}</h2>
         <div class="space-y-2 sm:space-y-0 sm:flex sm:items-center sm:gap-2">
-          <div class="flex-1 p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">1</span>
-              <Icon name="mdi:palette-outline" size="24" class="text-neutral-400 dark:text-neutral-500" />
+          <template v-for="(step, index) in workflowSteps" :key="step.key">
+            <div class="workflow-card">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">
+                  {{ index + 1 }}
+                </span>
+                <Icon :name="step.icon" size="24" class="text-neutral-400 dark:text-neutral-500" />
+              </div>
+              <h3 class="font-semibold mb-2">{{ t(`workflow.steps.${step.key}.title`) }}</h3>
+              <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                {{ t(`workflow.steps.${step.key}.description`) }}
+              </p>
             </div>
-            <h3 class="font-semibold mb-2">{{ t('workflow.steps.design.title') }}</h3>
-            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t('workflow.steps.design.description') }}</p>
-          </div>
-          <div class="flex justify-center py-1 sm:py-0 sm:px-1">
-            <Icon v-show="!isDesktop" name="mdi:chevron-down" size="20" class="text-neutral-400 dark:text-neutral-500" />
-            <Icon v-show="isDesktop" name="mdi:chevron-right" size="20" class="text-neutral-400 dark:text-neutral-500" />
-          </div>
-          <div class="flex-1 p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">2</span>
-              <Icon name="mdi:code-braces" size="24" class="text-neutral-400 dark:text-neutral-500" />
+            <div v-if="index < workflowSteps.length - 1" class="flex justify-center py-1 sm:py-0 sm:px-1">
+              <Icon v-show="!isDesktop" name="mdi:chevron-down" size="20" class="text-neutral-400 dark:text-neutral-500" />
+              <Icon v-show="isDesktop" name="mdi:chevron-right" size="20" class="text-neutral-400 dark:text-neutral-500" />
             </div>
-            <h3 class="font-semibold mb-2">{{ t('workflow.steps.integration.title') }}</h3>
-            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t('workflow.steps.integration.description') }}</p>
-          </div>
-          <div class="flex justify-center py-1 sm:py-0 sm:px-1">
-            <Icon v-show="!isDesktop" name="mdi:chevron-down" size="20" class="text-neutral-400 dark:text-neutral-500" />
-            <Icon v-show="isDesktop" name="mdi:chevron-right" size="20" class="text-neutral-400 dark:text-neutral-500" />
-          </div>
-          <div class="flex-1 p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">3</span>
-              <Icon name="mdi:wrench-outline" size="24" class="text-neutral-400 dark:text-neutral-500" />
-            </div>
-            <h3 class="font-semibold mb-2">{{ t('workflow.steps.maintenance.title') }}</h3>
-            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t('workflow.steps.maintenance.description') }}</p>
-          </div>
+          </template>
         </div>
       </section>
 
@@ -175,7 +151,10 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             class="p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
           >
             <h3 class="font-semibold text-neutral-600 dark:text-neutral-400 mb-2">{{ t(`pricing.types.${type}.title`) }}</h3>
-            <p class="text-2xl font-semibold">{{ t(`pricing.types.${type}.price`) }}<span v-if="type !== 'custom'" class="text-base font-normal text-neutral-400 dark:text-neutral-500 ml-0.5">&euro;</span></p>
+            <p class="text-2xl font-semibold">
+              {{ t(`pricing.types.${type}.price`) }}
+              <span v-if="type !== 'custom'" class="text-base font-normal text-neutral-400 dark:text-neutral-500 ml-0.5">&euro;</span>
+            </p>
           </div>
         </div>
       </section>
@@ -206,14 +185,84 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 </template>
 
 <style scoped>
+.social-btn {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.social-btn:hover {
+  background-color: var(--color-neutral-100);
+}
+
+:where(.dark) .social-btn:hover {
+  background-color: var(--color-neutral-800);
+}
+
+.social-tooltip {
+  position: absolute;
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(0.25rem);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.15s ease;
+  background-color: var(--color-neutral-800);
+  color: white;
+}
+
+:where(.dark) .social-tooltip {
+  background-color: var(--color-neutral-200);
+  color: var(--color-neutral-900);
+}
+
+.social-tooltip.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.workflow-card {
+  flex: 1;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background-color: var(--color-neutral-50);
+  border: 1px solid var(--color-neutral-200);
+  transition: border-color 0.15s;
+}
+
+.workflow-card:hover {
+  border-color: var(--color-neutral-300);
+}
+
+:where(.dark) .workflow-card {
+  background-color: var(--color-neutral-800);
+  border-color: var(--color-neutral-700);
+}
+
+:where(.dark) .workflow-card:hover {
+  border-color: var(--color-neutral-600);
+}
+
 .icon-swap-enter-active,
 .icon-swap-leave-active {
   transition: all 0.2s ease;
 }
+
 .icon-swap-enter-from {
   opacity: 0;
   transform: scale(0.5) rotate(-90deg);
 }
+
 .icon-swap-leave-to {
   opacity: 0;
   transform: scale(0.5) rotate(90deg);
