@@ -25,6 +25,8 @@ const copyDiscord = async () => {
   setTimeout(() => discordCopied.value = false, 2000)
 }
 
+const hoveredSocial = ref<string | null>(null)
+
 const workflowSteps = [
   { key: 'design', icon: 'mdi:palette-outline' },
   { key: 'integration', icon: 'mdi:code-braces' },
@@ -69,32 +71,51 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             v-for="social in socials.slice(0, 2)"
             :key="social.label"
             :href="social.href"
-            :title="social.label"
+            target="_blank"
+            rel="noopener noreferrer"
             :aria-label="social.label"
-            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            class="social-link hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            @mouseenter="hoveredSocial = social.label"
+            @mouseleave="hoveredSocial = null"
           >
             <Icon :name="social.icon" size="24" />
+            <span
+              class="social-tooltip bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
+              :class="{ 'opacity-100 translate-y-0': hoveredSocial === social.label }"
+            >{{ social.label }}</span>
           </a>
           <button
-            :title="discordCopied ? 'Copied!' : 'Discord'"
             aria-label="Discord"
-            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            class="social-link cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800"
             @click="copyDiscord"
+            @mouseenter="hoveredSocial = 'Discord'"
+            @mouseleave="hoveredSocial = null"
           >
             <Transition name="icon-swap" mode="out-in">
               <Icon v-if="discordCopied" key="check" name="mdi:check" size="24" class="text-green-500" />
               <Icon v-else key="discord" name="mdi:discord" size="24" />
             </Transition>
+            <span
+              class="social-tooltip bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
+              :class="{ 'opacity-100 translate-y-0': hoveredSocial === 'Discord' || discordCopied }"
+            >{{ discordCopied ? 'Copied!' : 'Discord' }}</span>
           </button>
           <a
             v-for="social in socials.slice(2)"
             :key="social.label"
             :href="social.href"
-            :title="social.label"
+            target="_blank"
+            rel="noopener noreferrer"
             :aria-label="social.label"
-            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            class="social-link hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            @mouseenter="hoveredSocial = social.label"
+            @mouseleave="hoveredSocial = null"
           >
             <Icon :name="social.icon" size="24" />
+            <span
+              class="social-tooltip bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900"
+              :class="{ 'opacity-100 translate-y-0': hoveredSocial === social.label }"
+            >{{ social.label }}</span>
           </a>
         </div>
       </section>
@@ -166,6 +187,39 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 </template>
 
 <style scoped>
+.social-link {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  transition: background-color 0.15s;
+}
+
+.social-tooltip {
+  position: absolute;
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.15s ease;
+}
+
+.social-tooltip.opacity-100 {
+  opacity: 1;
+}
+
+.social-tooltip.translate-y-0 {
+  transform: translateX(-50%) translateY(0);
+}
+
 .icon-swap-enter-active,
 .icon-swap-leave-active {
   transition: all 0.2s ease;
@@ -177,15 +231,5 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 .icon-swap-leave-to {
   opacity: 0;
   transform: scale(0.5) rotate(90deg);
-}
-
-.tooltip-enter-active,
-.tooltip-leave-active {
-  transition: all 0.2s ease;
-}
-.tooltip-enter-from,
-.tooltip-leave-to {
-  opacity: 0;
-  transform: translate(-50%, 4px);
 }
 </style>
