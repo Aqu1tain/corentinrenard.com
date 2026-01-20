@@ -60,6 +60,8 @@ const workflowSteps = [
 
 const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 
+const showVideo = ref(false)
+
 const isDesktop = ref(false)
 let mediaQuery: MediaQueryList | null = null
 
@@ -179,14 +181,21 @@ const onMediaChange = (e: MediaQueryListEvent) => {
 
       <section class="mb-24">
         <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('interview.title') }}</h2>
-        <div class="aspect-video rounded-2xl overflow-hidden">
+        <div class="aspect-video rounded-2xl overflow-hidden relative">
           <iframe
-            src="https://www.youtube.com/embed/DkTTzXJa1So"
+            v-if="showVideo"
+            src="https://www.youtube.com/embed/DkTTzXJa1So?autoplay=1"
             title="Interview"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
             class="w-full h-full"
           />
+          <button v-else class="video-facade" @click="showVideo = true">
+            <img src="/interview-thumbnail.png" alt="Interview thumbnail" class="w-full h-full object-cover" />
+            <span class="video-play-btn">
+              <Icon name="mdi:play" size="48" />
+            </span>
+          </button>
         </div>
       </section>
 
@@ -284,5 +293,34 @@ const onMediaChange = (e: MediaQueryListEvent) => {
 .icon-swap-leave-to {
   opacity: 0;
   transform: scale(0.5) rotate(90deg);
+}
+
+.video-facade {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.video-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  transition: background-color 0.15s, transform 0.15s;
+}
+
+.video-facade:hover .video-play-btn {
+  background-color: rgba(0, 0, 0, 0.9);
+  transform: translate(-50%, -50%) scale(1.1);
 }
 </style>
