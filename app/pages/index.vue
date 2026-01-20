@@ -54,15 +54,15 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
         <p class="text-lg text-neutral-600 dark:text-neutral-400 mb-3">{{ t('role') }}</p>
         <p class="text-sm text-neutral-400 dark:text-neutral-600 italic">{{ t('avatarJoke') }}</p>
 
-        <div class="flex justify-center gap-3 mt-10">
+        <div class="flex justify-center gap-2 mt-10">
           <a
             v-for="social in socials"
             :key="social.label"
             :href="social.href"
             :aria-label="social.label"
-            class="w-11 h-11 flex items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+            class="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors"
           >
-            <Icon :name="social.icon" class="w-5 h-5" />
+            <Icon :name="social.icon" class="w-6 h-6" />
           </a>
         </div>
       </section>
