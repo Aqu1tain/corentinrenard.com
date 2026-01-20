@@ -13,11 +13,17 @@ const toggleLocale = () => {
 const socials = [
   { icon: 'mdi:instagram', href: 'https://www.instagram.com/corentin_fox/', label: 'Instagram' },
   { icon: 'mdi:github', href: 'https://github.com/Aqu1tain', label: 'GitHub' },
-  { icon: 'mdi:discord', href: 'https://discord.com/users/Akitain', label: 'Discord' },
   { icon: 'mdi:email', href: 'mailto:contact@corentinrenard.com', label: 'Email' },
   { icon: 'mdi:linkedin', href: 'https://www.linkedin.com/in/corentin-renard-web/', label: 'LinkedIn' },
   { icon: 'mdi:behance', href: 'https://www.behance.net/corentin_fox', label: 'Behance' },
 ]
+
+const discordCopied = ref(false)
+const copyDiscord = async () => {
+  await navigator.clipboard.writeText('Akitain')
+  discordCopied.value = true
+  setTimeout(() => discordCopied.value = false, 2000)
+}
 
 const workflowSteps = ['design', 'integration', 'maintenance'] as const
 const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
@@ -56,7 +62,23 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 
         <div class="flex justify-center gap-2 mt-10">
           <a
-            v-for="social in socials"
+            v-for="social in socials.slice(0, 2)"
+            :key="social.label"
+            :href="social.href"
+            :aria-label="social.label"
+            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <Icon :name="social.icon" size="24" />
+          </a>
+          <button
+            aria-label="Discord"
+            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors relative"
+            @click="copyDiscord"
+          >
+            <Icon :name="discordCopied ? 'mdi:check' : 'mdi:discord'" size="24" :class="discordCopied ? 'text-green-500' : ''" />
+          </button>
+          <a
+            v-for="social in socials.slice(2)"
             :key="social.label"
             :href="social.href"
             :aria-label="social.label"
