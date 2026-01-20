@@ -124,7 +124,7 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
               v-if="index < workflowSteps.length - 1"
               name="mdi:chevron-right"
               size="20"
-              class="hidden sm:block absolute -right-3.5 top-1/2 -translate-y-1/2 text-neutral-300 dark:text-neutral-600"
+              class="hidden sm:block absolute left-full top-1/2 -translate-y-1/2 translate-x-[2px] text-neutral-400 dark:text-neutral-500"
             />
           </div>
         </div>
