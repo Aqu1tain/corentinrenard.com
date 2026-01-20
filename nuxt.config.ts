@@ -10,6 +10,10 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
   ],
 
+  icon: {
+    cssLayer: 'icons',
+  },
+
   css: ['~/assets/css/main.css'],
 
   vite: {
