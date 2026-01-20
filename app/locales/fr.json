@@ -1,0 +1,52 @@
+{
+  "name": "Corentin Renard",
+  "role": "Designer Web Full Stack",
+  "avatarJoke": "Oui, mon nom veut dire Renard. Non, je n'ai pas mis un renard en photo de profil.",
+  "workflow": {
+    "title": "Processus",
+    "steps": {
+      "design": {
+        "title": "Design",
+        "description": "Design UI/UX sur Figma, maquettes et prototypes"
+      },
+      "integration": {
+        "title": "Integration",
+        "description": "Integration reelle avec retours jusqu'a satisfaction"
+      },
+      "maintenance": {
+        "title": "Maintenance",
+        "description": "Support continu et mises a jour pour un site performant"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Tarifs",
+    "subtitle": "Tarifs indicatifs uniquement, sur devis",
+    "types": {
+      "landing": {
+        "title": "Landing Page",
+        "price": "A partir de 500"
+      },
+      "showcase": {
+        "title": "Site Vitrine",
+        "price": "A partir de 1500"
+      },
+      "ecommerce": {
+        "title": "E-commerce",
+        "price": "A partir de 3000"
+      },
+      "custom": {
+        "title": "Projet Sur Mesure",
+        "price": "Sur devis"
+      }
+    }
+  },
+  "works": {
+    "title": "Realisations",
+    "soon": "Bientot disponible"
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre"
+  }
+}

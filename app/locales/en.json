@@ -1,0 +1,52 @@
+{
+  "name": "Corentin Renard",
+  "role": "Full Stack Web Designer",
+  "avatarJoke": "Yes, my name means Fox. No, I didn't pick a fox as my profile picture.",
+  "workflow": {
+    "title": "Workflow",
+    "steps": {
+      "design": {
+        "title": "Design",
+        "description": "UI/UX design on Figma, wireframes and prototypes"
+      },
+      "integration": {
+        "title": "Integration",
+        "description": "Real integration with feedback loops until you're satisfied"
+      },
+      "maintenance": {
+        "title": "Maintenance",
+        "description": "Ongoing support and updates to keep your site running smoothly"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Indicative pricing only, quote on request",
+    "types": {
+      "landing": {
+        "title": "Landing Page",
+        "price": "From 500"
+      },
+      "showcase": {
+        "title": "Showcase Website",
+        "price": "From 1500"
+      },
+      "ecommerce": {
+        "title": "E-commerce",
+        "price": "From 3000"
+      },
+      "custom": {
+        "title": "Custom Project",
+        "price": "On quote"
+      }
+    }
+  },
+  "works": {
+    "title": "Featured Works",
+    "soon": "Coming soon"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  }
+}
