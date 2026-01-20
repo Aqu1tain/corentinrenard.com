@@ -15,13 +15,13 @@ useSeoMeta({
   description: () => t('seo.description'),
   ogTitle: () => `${t('name')} - ${t('seo.title')}`,
   ogDescription: () => t('seo.description'),
-  ogImage: '/apple-touch-icon.png',
+  ogImage: 'https://corentinrenard.com/og-image.png',
   ogType: 'website',
   ogUrl: 'https://corentinrenard.com',
-  twitterCard: 'summary',
+  twitterCard: 'summary_large_image',
   twitterTitle: () => `${t('name')} - ${t('seo.title')}`,
   twitterDescription: () => t('seo.description'),
-  twitterImage: '/apple-touch-icon.png',
+  twitterImage: 'https://corentinrenard.com/og-image.png',
 })
 
 useHead({
