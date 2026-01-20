@@ -25,7 +25,11 @@ const copyDiscord = async () => {
   setTimeout(() => discordCopied.value = false, 2000)
 }
 
-const workflowSteps = ['design', 'integration', 'maintenance'] as const
+const workflowSteps = [
+  { key: 'design', icon: 'mdi:palette-outline' },
+  { key: 'integration', icon: 'mdi:code-braces' },
+  { key: 'maintenance', icon: 'mdi:wrench-outline' },
+] as const
 const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 </script>
 
@@ -102,19 +106,26 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 
       <section class="mb-24">
         <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('workflow.title') }}</h2>
-        <div class="grid gap-8">
+        <div class="grid sm:grid-cols-3 gap-6">
           <div
             v-for="(step, index) in workflowSteps"
-            :key="step"
-            class="flex gap-5 items-start"
+            :key="step.key"
+            class="relative p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 group hover:border-neutral-300 dark:hover:border-neutral-600 transition-colors"
           >
-            <span class="w-9 h-9 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">
-              {{ index + 1 }}
-            </span>
-            <div class="pt-1">
-              <h3 class="font-semibold mb-1">{{ t(`workflow.steps.${step}.title`) }}</h3>
-              <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t(`workflow.steps.${step}.description`) }}</p>
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold">
+                {{ index + 1 }}
+              </span>
+              <Icon :name="step.icon" size="24" class="text-neutral-400 dark:text-neutral-500" />
             </div>
+            <h3 class="font-semibold mb-2">{{ t(`workflow.steps.${step.key}.title`) }}</h3>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ t(`workflow.steps.${step.key}.description`) }}</p>
+            <Icon
+              v-if="index < workflowSteps.length - 1"
+              name="mdi:chevron-right"
+              size="20"
+              class="hidden sm:block absolute -right-3.5 top-1/2 -translate-y-1/2 text-neutral-300 dark:text-neutral-600"
+            />
           </div>
         </div>
       </section>
