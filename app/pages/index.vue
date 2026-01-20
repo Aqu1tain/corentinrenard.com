@@ -72,10 +72,21 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
           </a>
           <button
             aria-label="Discord"
-            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors relative"
+            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors relative group"
             @click="copyDiscord"
           >
-            <Icon :name="discordCopied ? 'mdi:check' : 'mdi:discord'" size="24" :class="discordCopied ? 'text-green-500' : ''" />
+            <Transition name="icon-swap" mode="out-in">
+              <Icon v-if="discordCopied" key="check" name="mdi:check" size="24" class="text-green-500" />
+              <Icon v-else key="discord" name="mdi:discord" size="24" />
+            </Transition>
+            <Transition name="tooltip">
+              <span
+                v-if="discordCopied"
+                class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900 px-2 py-1 rounded whitespace-nowrap"
+              >
+                Copied!
+              </span>
+            </Transition>
           </button>
           <a
             v-for="social in socials.slice(2)"
@@ -147,3 +158,28 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
     </footer>
   </div>
 </template>
+
+<style scoped>
+.icon-swap-enter-active,
+.icon-swap-leave-active {
+  transition: all 0.2s ease;
+}
+.icon-swap-enter-from {
+  opacity: 0;
+  transform: scale(0.5) rotate(-90deg);
+}
+.icon-swap-leave-to {
+  opacity: 0;
+  transform: scale(0.5) rotate(90deg);
+}
+
+.tooltip-enter-active,
+.tooltip-leave-active {
+  transition: all 0.2s ease;
+}
+.tooltip-enter-from,
+.tooltip-leave-to {
+  opacity: 0;
+  transform: translate(-50%, 4px);
+}
+</style>
