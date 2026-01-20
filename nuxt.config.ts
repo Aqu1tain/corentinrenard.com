@@ -41,8 +41,14 @@ export default defineNuxtConfig({
     },
   },
 
+  site: {
+    url: 'https://corentinrenard.com',
+  },
+
   app: {
     head: {
+      htmlAttrs: { lang: 'en' },
+      titleTemplate: '%s | Corentin Renard',
       link: [
         { rel: 'icon', type: 'image/png', href: '/favicon-32x32.png' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },

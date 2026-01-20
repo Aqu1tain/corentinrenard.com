@@ -10,6 +10,24 @@ const toggleLocale = () => {
   setLocale(locale.value === 'en' ? 'fr' : 'en')
 }
 
+useSeoMeta({
+  title: () => t('seo.title'),
+  description: () => t('seo.description'),
+  ogTitle: () => `${t('name')} - ${t('seo.title')}`,
+  ogDescription: () => t('seo.description'),
+  ogImage: '/apple-touch-icon.png',
+  ogType: 'website',
+  ogUrl: 'https://corentinrenard.com',
+  twitterCard: 'summary',
+  twitterTitle: () => `${t('name')} - ${t('seo.title')}`,
+  twitterDescription: () => t('seo.description'),
+  twitterImage: '/apple-touch-icon.png',
+})
+
+useHead({
+  htmlAttrs: { lang: () => locale.value },
+})
+
 const socials = [
   { icon: 'mdi:instagram', href: 'https://www.instagram.com/corentin_fox/', label: 'Instagram' },
   { icon: 'mdi:github', href: 'https://github.com/Aqu1tain', label: 'GitHub' },
