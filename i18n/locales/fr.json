@@ -41,6 +41,9 @@
       }
     }
   },
+  "interview": {
+    "title": "Interview"
+  },
   "works": {
     "title": "Réalisations",
     "soon": "Bientôt disponible"

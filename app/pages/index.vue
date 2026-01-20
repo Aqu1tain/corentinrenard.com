@@ -101,6 +101,19 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
         </div>
       </section>
 
+      <section class="mb-24">
+        <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('interview.title') }}</h2>
+        <div class="aspect-video rounded-2xl overflow-hidden">
+          <iframe
+            src="https://www.youtube.com/embed/DkTTzXJa1So"
+            title="Interview"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="w-full h-full"
+          />
+        </div>
+      </section>
+
       <section class="mb-16">
         <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('works.title') }}</h2>
         <p class="text-center text-neutral-400 dark:text-neutral-600">{{ t('works.soon') }}</p>

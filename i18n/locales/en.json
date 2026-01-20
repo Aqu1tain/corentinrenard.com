@@ -41,6 +41,9 @@
       }
     }
   },
+  "interview": {
+    "title": "Interview"
+  },
   "works": {
     "title": "Featured Works",
     "soon": "Coming soon"
