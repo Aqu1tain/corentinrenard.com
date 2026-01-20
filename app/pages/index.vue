@@ -14,7 +14,7 @@ const socials = [
   { icon: 'mdi:instagram', href: '#', label: 'Instagram' },
   { icon: 'mdi:github', href: '#', label: 'GitHub' },
   { icon: 'mdi:discord', href: '#', label: 'Discord' },
-  { icon: 'mdi:email', href: 'mailto:contact@example.com', label: 'Email' },
+  { icon: 'mdi:email', href: 'mailto:contact@corentinrenard.com', label: 'Email' },
   { icon: 'mdi:linkedin', href: '#', label: 'LinkedIn' },
   { icon: 'mdi:behance', href: '#', label: 'Behance' },
 ]
@@ -24,20 +24,20 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
 </script>
 
 <template>
-  <div class="min-h-screen bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 font-sans transition-colors">
+  <div class="min-h-screen bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100 font-sans transition-colors">
     <header class="fixed top-0 right-0 p-4 sm:p-6 flex gap-2 z-50">
       <button
-        class="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors text-sm font-medium"
+        class="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-sm font-medium"
         @click="toggleLocale"
       >
-        {{ locale === 'en' ? 'FR' : 'EN' }}
+        {{ locale.toUpperCase() }}
       </button>
       <button
-        class="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+        class="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
         @click="toggleTheme"
       >
         <Icon
-          :name="colorMode.value === 'dark' ? 'mdi:weather-sunny' : 'mdi:weather-night'"
+          :name="colorMode.value === 'dark' ? 'mdi:weather-night' : 'mdi:weather-sunny'"
           class="w-5 h-5"
         />
       </button>
@@ -48,7 +48,7 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
         <img
           src="https://www.zoologiste.com/images/main/capybara-ia.jpg"
           alt="Corentin Renard"
-          class="w-36 h-36 rounded-full mx-auto mb-8 object-cover ring-4 ring-neutral-100 dark:ring-neutral-800"
+          class="w-36 h-36 rounded-full mx-auto mb-8 object-cover ring-4 ring-neutral-100 dark:ring-neutral-700"
         />
         <h1 class="font-display text-4xl sm:text-5xl mb-3">{{ t('name') }}</h1>
         <p class="text-lg text-neutral-600 dark:text-neutral-400 mb-3">{{ t('role') }}</p>
@@ -60,9 +60,9 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             :key="social.label"
             :href="social.href"
             :aria-label="social.label"
-            class="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors"
+            class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
           >
-            <Icon :name="social.icon" class="w-6 h-6" />
+            <Icon :name="social.icon" size="32" />
           </a>
         </div>
       </section>
@@ -93,7 +93,7 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
           <div
             v-for="type in pricingTypes"
             :key="type"
-            class="p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800"
+            class="p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
           >
             <h3 class="font-semibold text-neutral-600 dark:text-neutral-400 mb-2">{{ t(`pricing.types.${type}.title`) }}</h3>
             <p class="text-2xl font-display">{{ t(`pricing.types.${type}.price`) }}<span v-if="type !== 'custom'" class="text-base font-sans text-neutral-400 dark:text-neutral-500 ml-0.5">&euro;</span></p>
