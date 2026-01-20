@@ -62,7 +62,7 @@ const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
             :aria-label="social.label"
             class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
           >
-            <Icon :name="social.icon" size="32" />
+            <Icon :name="social.icon" size="24" />
           </a>
         </div>
       </section>
