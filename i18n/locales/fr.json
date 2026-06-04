@@ -3,6 +3,9 @@
     "title": "Designer Web Full Stack",
     "description": "Corentin Renard - Designer Web Full Stack. Design UI/UX, développement web sur mesure et maintenance pour landing pages, sites vitrines et e-commerce."
   },
+  "cv": {
+    "download": "Télécharger mon CV"
+  },
   "name": "Corentin Renard",
   "role": "Designer Web Full Stack",
   "avatarJoke": "Oui je m'appelle Renard. Non je n'ai pas mis de Renard en photo de profil.",
@@ -50,7 +53,44 @@
   },
   "works": {
     "title": "Réalisations",
-    "soon": "Promis ça arrive bientôt x)"
+    "subtitle": "Un espace flexible pour les missions client, études de cas et projets personnels.",
+    "types": {
+      "case-study": "Étude de cas",
+      "mission": "Mission client",
+      "personal": "Projet personnel"
+    },
+    "detail": {
+      "back": "Retour à l'accueil",
+      "context": "Contexte",
+      "approach": "Approche",
+      "result": "Résultat"
+    },
+    "items": {
+      "case-study": {
+        "title": "Bientôt disponible",
+        "description": "Le déroulé détaillé d'un projet stratégique : objectifs, contraintes, décisions design et résultats mesurables.",
+        "preview": "Un récit complet pour un projet stratégique, de bout en bout.",
+        "context": "Cet emplacement est réservé à un projet important où le processus compte autant que l'interface finale.",
+        "approach": "Il couvrira la découverte, les choix UX, les décisions techniques, les contraintes, les itérations et les compromis.",
+        "result": "Il mettra en avant des livrables concrets, des métriques, des visuels et l'impact sur l'activité du client."
+      },
+      "client-mission": {
+        "title": "Bientôt disponible",
+        "description": "Une prestation freelance avec un périmètre clair, des livrables, un planning et la valeur concrète apportée au client.",
+        "preview": "Périmètre, rôle, livrables et valeur, en un coup d'œil.",
+        "context": "Cet emplacement est réservé à une mission client expliquée rapidement, sans en faire une étude de cas complète.",
+        "approach": "Il présentera le périmètre, mon rôle, la stack, le mode de collaboration et ce qui a été livré.",
+        "result": "Il rendra la mission lisible comme un résultat concret, pas seulement comme un logo ou un titre."
+      },
+      "personal-project": {
+        "title": "Bientôt disponible",
+        "description": "Un projet personnel qui montre le goût technique, l'autonomie et la curiosité au-delà des missions client.",
+        "preview": "Un side project où l'intention et le soin se voient.",
+        "context": "Cet emplacement est réservé à une expérimentation ou une idée produit qui révèle ma façon de penser et de construire.",
+        "approach": "Il se concentrera sur l'intuition produit, l'exploration technique, la direction design et les leçons apprises.",
+        "result": "Il donnera au projet assez d'espace pour paraître intentionnel, sans forcer un format d'étude de cas client."
+      }
+    }
   },
   "theme": {
     "light": "Clair",

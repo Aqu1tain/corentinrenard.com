@@ -1,31 +1,11 @@
 <script setup lang="ts">
-const { t, locale, setLocale } = useI18n()
-const colorMode = useColorMode()
+import { workItems } from '~/utils/works'
 
-const toggleTheme = () => {
-  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
-}
+const { t, locale } = useI18n()
 
-const toggleLocale = () => {
-  setLocale(locale.value === 'en' ? 'fr' : 'en')
-}
-
-useSeoMeta({
+usePageSeo({
   title: () => t('seo.title'),
   description: () => t('seo.description'),
-  ogTitle: () => `${t('name')} - ${t('seo.title')}`,
-  ogDescription: () => t('seo.description'),
-  ogImage: 'https://corentinrenard.com/og-image.png',
-  ogType: 'website',
-  ogUrl: 'https://corentinrenard.com',
-  twitterCard: 'summary_large_image',
-  twitterTitle: () => `${t('name')} - ${t('seo.title')}`,
-  twitterDescription: () => t('seo.description'),
-  twitterImage: 'https://corentinrenard.com/og-image.png',
-})
-
-useHead({
-  htmlAttrs: { lang: () => locale.value },
 })
 
 const socials = [
@@ -81,26 +61,8 @@ const onMediaChange = (e: MediaQueryListEvent) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100 font-sans transition-colors">
-    <header class="fixed top-0 right-0 p-4 sm:p-6 flex gap-2 z-50">
-      <button
-        class="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-sm font-medium"
-        @click="toggleLocale"
-      >
-        {{ locale.toUpperCase() }}
-      </button>
-      <button
-        class="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-        @click="toggleTheme"
-      >
-        <Icon
-          :name="colorMode.value === 'dark' ? 'mdi:weather-night' : 'mdi:weather-sunny'"
-          class="w-5 h-5"
-        />
-      </button>
-    </header>
-
-    <main class="max-w-3xl mx-auto px-6 py-24 sm:py-32">
+  <div>
+    <main class="max-w-4xl mx-auto px-6 py-24 sm:py-32">
       <section class="text-center mb-24">
         <img
           src="/apple-touch-icon.png"
@@ -135,6 +97,17 @@ const onMediaChange = (e: MediaQueryListEvent) => {
             </span>
           </component>
         </div>
+      </section>
+
+      <section class="mb-24 text-center">
+        <a
+          :href="`/cv-${locale}.pdf`"
+          target="_blank"
+          class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-semibold text-neutral-900 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all"
+        >
+          <Icon name="mdi:file-download-outline" size="22" />
+          <span>{{ t('cv.download') }}</span>
+        </a>
       </section>
 
       <section class="mb-24">
@@ -199,9 +172,27 @@ const onMediaChange = (e: MediaQueryListEvent) => {
         </div>
       </section>
 
-      <section class="mb-16">
-        <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('works.title') }}</h2>
-        <p class="text-center text-neutral-400 dark:text-neutral-600">{{ t('works.soon') }}</p>
+      <section id="works" class="mb-16 scroll-mt-12">
+        <h2 class="font-display text-2xl sm:text-3xl mb-12 text-center">{{ t('works.title') }}</h2>
+        <div class="space-y-6">
+          <NuxtLink
+            v-for="work in workItems"
+            :key="work.slug"
+            :to="`/works/${work.slug}`"
+            class="work-row group block"
+          >
+            <h3
+              class="work-title"
+              :style="{
+                '--hover-font': work.font ?? 'inherit',
+              }"
+            >
+              <span class="work-title-text">{{ t(`works.items.${work.slug}.title`) }}</span>
+            </h3>
+            <p class="work-preview">{{ t(`works.items.${work.slug}.preview`) }}</p>
+            <p class="work-type">{{ t(`works.types.${work.type}`) }}</p>
+          </NuxtLink>
+        </div>
       </section>
     </main>
 
@@ -269,6 +260,83 @@ const onMediaChange = (e: MediaQueryListEvent) => {
 
 .workflow-card:hover {
   border-color: var(--color-neutral-300);
+}
+
+.divider {
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+:where(.dark) .divider {
+  border-top-color: var(--color-neutral-700);
+}
+
+.work-row {
+  display: block;
+  padding: 2rem 0;
+  overflow: hidden;
+}
+
+.work-title {
+  font-family: var(--font-display), serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1.1;
+  color: var(--color-neutral-900);
+  white-space: nowrap;
+  margin: 0;
+}
+
+:where(.dark) .work-title {
+  color: var(--color-neutral-100);
+}
+
+.work-title-text {
+  display: inline-block;
+  transition: color 0.2s;
+}
+
+.work-row:hover .work-title-text {
+  font-family: var(--hover-font);
+  animation: title-marquee 8s linear infinite;
+}
+
+@keyframes title-marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.work-type {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-neutral-400);
+  margin-top: 0.25rem;
+}
+
+.work-preview {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-neutral-500);
+  max-width: 32rem;
+  margin-top: 0.5rem;
+  transition: color 0.2s;
+}
+
+.work-row:hover .work-preview {
+  color: var(--color-neutral-600);
+}
+
+:where(.dark) .work-preview {
+  color: var(--color-neutral-400);
+}
+
+:where(.dark) .work-row:hover .work-preview {
+  color: var(--color-neutral-200);
+}
+
+:where(.dark) .work-type {
+  color: var(--color-neutral-500);
 }
 
 :where(.dark) .workflow-card {

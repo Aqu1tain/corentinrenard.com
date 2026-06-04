@@ -3,6 +3,9 @@
     "title": "Full Stack Web Designer",
     "description": "Corentin Renard - Full Stack Web Designer. UI/UX design, custom web development, and ongoing maintenance for landing pages, showcase websites, and e-commerce."
   },
+  "cv": {
+    "download": "Download my CV"
+  },
   "name": "Corentin Renard",
   "role": "Full Stack Web Designer",
   "avatarJoke": "Yes, my name means Fox. No, I didn't pick a fox as my profile picture.",
@@ -50,7 +53,44 @@
   },
   "works": {
     "title": "Featured Works",
-    "soon": "Coming soon"
+    "subtitle": "A flexible space for client missions, case studies and personal projects.",
+    "types": {
+      "case-study": "Case study",
+      "mission": "Client mission",
+      "personal": "Personal project"
+    },
+    "detail": {
+      "back": "Back to home",
+      "context": "Context",
+      "approach": "Approach",
+      "result": "Result"
+    },
+    "items": {
+      "case-study": {
+        "title": "Coming soon",
+        "description": "A detailed walkthrough of a strategic project, with goals, constraints, design decisions and measurable outcomes.",
+        "preview": "A long-form story for strategic projects, end to end.",
+        "context": "This slot is reserved for a substantial project where the process matters as much as the final interface.",
+        "approach": "It will cover discovery, UX choices, technical decisions, constraints, iterations and trade-offs.",
+        "result": "It will highlight concrete deliverables, metrics, screenshots and the impact on the client's business."
+      },
+      "client-mission": {
+        "title": "Coming soon",
+        "description": "A freelance engagement with a clear scope, deliverables, timeline and the concrete value brought to the client.",
+        "preview": "Scope, role, deliverables and value, at a glance.",
+        "context": "This slot is reserved for a client engagement explained quickly, without turning it into a full case study.",
+        "approach": "It will present the scope, my role, the stack, the collaboration mode and what was delivered.",
+        "result": "It will make the mission readable as a concrete outcome rather than just a logo or a title."
+      },
+      "personal-project": {
+        "title": "Coming soon",
+        "description": "A self-initiated project that shows technical taste, autonomy and curiosity beyond client work.",
+        "preview": "A side project where the intent and the craft show.",
+        "context": "This slot is reserved for an experiment or product idea that reveals how I think and build.",
+        "approach": "It will focus on product intuition, technical exploration, design direction and the lessons learned.",
+        "result": "It will give the project enough space to feel intentional, without forcing a client-case-study format."
+      }
+    }
   },
   "theme": {
     "light": "Light",
