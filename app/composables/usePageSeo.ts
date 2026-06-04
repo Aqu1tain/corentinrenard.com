@@ -2,7 +2,7 @@ interface SeoInput {
   title: () => string
   description: () => string
   type?: 'website' | 'article'
-  url?: () => string
+  path?: () => string
 }
 
 const SITE = 'https://corentinrenard.com'
@@ -19,7 +19,7 @@ export const usePageSeo = (input: SeoInput) => {
     ogDescription: input.description,
     ogImage: OG_IMAGE,
     ogType: input.type ?? 'website',
-    ogUrl: input.url ?? (() => SITE),
+    ogUrl: () => `${SITE}${input.path?.() ?? ''}`,
     twitterCard: 'summary_large_image',
     twitterTitle: () => `${input.title()} - ${name()}`,
     twitterDescription: input.description,

@@ -187,7 +187,10 @@ const onMediaChange = (e: MediaQueryListEvent) => {
                 '--hover-font': work.font ?? 'inherit',
               }"
             >
-              <span class="work-title-text">{{ t(`works.items.${work.slug}.title`) }}</span>
+              <span class="work-title-text">
+                <span class="work-title-segment">{{ t(`works.items.${work.slug}.title`) }}</span>
+                <span class="work-title-segment" aria-hidden="true">{{ t(`works.items.${work.slug}.title`) }}</span>
+              </span>
             </h3>
             <p class="work-preview">{{ t(`works.items.${work.slug}.preview`) }}</p>
             <p class="work-type">{{ t(`works.types.${work.type}`) }}</p>
@@ -262,14 +265,6 @@ const onMediaChange = (e: MediaQueryListEvent) => {
   border-color: var(--color-neutral-300);
 }
 
-.divider {
-  border-top: 1px solid var(--color-neutral-200);
-}
-
-:where(.dark) .divider {
-  border-top-color: var(--color-neutral-700);
-}
-
 .work-row {
   display: block;
   padding: 2rem 0;
@@ -291,8 +286,21 @@ const onMediaChange = (e: MediaQueryListEvent) => {
 }
 
 .work-title-text {
-  display: inline-block;
+  display: inline-flex;
   transition: color 0.2s;
+}
+
+.work-title-segment {
+  display: inline-block;
+  padding-right: 2rem;
+}
+
+.work-title-segment + .work-title-segment {
+  visibility: hidden;
+}
+
+.work-row:hover .work-title-segment + .work-title-segment {
+  visibility: visible;
 }
 
 .work-row:hover .work-title-text {
@@ -301,8 +309,8 @@ const onMediaChange = (e: MediaQueryListEvent) => {
 }
 
 @keyframes title-marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 .work-type {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { findWorkBySlug, workTypeMeta } from '~/utils/works'
+import { findWorkBySlug } from '~/utils/works'
 
 const route = useRoute()
 const { t } = useI18n()
@@ -14,7 +14,7 @@ usePageSeo({
   title: () => t(`works.items.${work.slug}.title`),
   description: () => t(`works.items.${work.slug}.description`),
   type: 'article',
-  url: () => `https://corentinrenard.com/works/${work.slug}`,
+  path: () => `/works/${work.slug}`,
 })
 
 const sections = ['context', 'approach', 'result'] as const
