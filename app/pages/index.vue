@@ -21,11 +21,13 @@ const socials = [
 ]
 
 const copiedSocial = ref<string | null>(null)
+let copyResetTimer: ReturnType<typeof setTimeout> | undefined
 const handleSocialClick = async (social: typeof socials[number]) => {
   if (social.action !== 'copy' || !social.value) return
   await navigator.clipboard.writeText(social.value)
   copiedSocial.value = social.label
-  setTimeout(() => copiedSocial.value = null, 2000)
+  clearTimeout(copyResetTimer)
+  copyResetTimer = setTimeout(() => copiedSocial.value = null, 2000)
 }
 
 const hoveredSocial = ref<string | null>(null)
