@@ -2,12 +2,14 @@
   "name": "Portfolio",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@10.17.1",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
     "@nuxt/icon": "^2.2.1",
@@ -21,6 +23,8 @@
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@iconify-json/mdi": "^1.2.3"
+    "@iconify-json/mdi": "^1.2.3",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.4"
   }
 }
