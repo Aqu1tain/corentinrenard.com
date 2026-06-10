@@ -4,13 +4,42 @@ export interface WorkItem {
   slug: string
   type: WorkType
   image?: string
-  font?: string
+  accent: string
+  year: string
+  stack: string[]
+  contentPath: string
+  published: boolean
 }
 
 export const workItems: WorkItem[] = [
-  { slug: 'case-study', type: 'case-study', font: "'DM Serif Display', serif" },
-  { slug: 'client-mission', type: 'mission' },
-  { slug: 'personal-project', type: 'personal', font: 'monospace' },
+  {
+    slug: 'case-study',
+    type: 'case-study',
+    accent: '#111111',
+    year: '2026',
+    stack: ['Strategy', 'UI/UX', 'Nuxt'],
+    contentPath: 'content/works/case-study.md',
+    published: false,
+  },
+  {
+    slug: 'client-mission',
+    type: 'mission',
+    accent: '#18a058',
+    year: '2026',
+    stack: ['Figma', 'Integration', 'Support'],
+    contentPath: 'content/works/client-mission.md',
+    published: false,
+  },
+  {
+    slug: 'personal-project',
+    type: 'personal',
+    accent: '#f06a2b',
+    year: 'Lab',
+    stack: ['Product', 'Prototype', 'Full stack'],
+    contentPath: 'content/works/personal-project.md',
+    published: false,
+  },
 ]
 
 export const findWorkBySlug = (slug: string) => workItems.find((work) => work.slug === slug)
+export const publishedWorkItems = workItems.filter((work) => work.published)

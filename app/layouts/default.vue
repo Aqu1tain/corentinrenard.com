@@ -1,36 +1,280 @@
 <script setup lang="ts">
-const { locale, setLocale } = useI18n()
+const { t, locale } = useI18n()
 const colorMode = useColorMode()
+const localePath = useLocalePath()
+const switchLocalePath = useSwitchLocalePath()
+const localeHead = useLocaleHead({ seo: true })
+
+useHead(() => ({
+  htmlAttrs: localeHead.value.htmlAttrs,
+  link: localeHead.value.link,
+  meta: localeHead.value.meta,
+}))
 
 const toggleTheme = () => {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
 
 const toggleLocale = () => {
-  setLocale(locale.value === 'en' ? 'fr' : 'en')
+  const nextLocale = locale.value === 'en' ? 'fr' : 'en'
+  const nextPath = switchLocalePath(nextLocale).split('#')[0] || '/'
+  navigateTo(nextPath)
 }
 </script>
 
 <template>
   <div class="min-h-screen bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100 font-sans transition-colors">
-    <header class="fixed top-0 right-0 p-4 sm:p-6 flex gap-2 z-50">
-      <button
-        class="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-sm font-medium"
-        @click="toggleLocale"
-      >
-        {{ locale.toUpperCase() }}
-      </button>
-      <button
-        class="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
-        @click="toggleTheme"
-      >
-        <Icon
-          :name="colorMode.value === 'dark' ? 'mdi:weather-night' : 'mdi:weather-sunny'"
-          class="w-5 h-5"
-        />
-      </button>
+    <header class="site-header">
+      <NuxtLink :to="localePath('/')" class="brand-mark" aria-label="Corentin Renard">
+        <img src="/apple-touch-icon.png" alt="" />
+      </NuxtLink>
+
+      <nav class="header-nav" aria-label="Primary navigation">
+        <NuxtLink :to="localePath({ path: '/', hash: '#works' })">{{ t('works.title') }}</NuxtLink>
+        <NuxtLink :to="localePath({ path: '/', hash: '#process' })">{{ t('workflow.title') }}</NuxtLink>
+        <a href="mailto:contact@corentinrenard.com">{{ t('nav.contact') }}</a>
+      </nav>
+
+      <div class="header-tools">
+        <details class="mobile-menu">
+          <summary class="utility-btn" :aria-label="t('nav.menu')">
+            <Icon name="mdi:menu" class="w-5 h-5" />
+          </summary>
+          <nav class="mobile-menu-panel" aria-label="Mobile navigation">
+            <NuxtLink :to="localePath({ path: '/', hash: '#works' })">{{ t('works.title') }}</NuxtLink>
+            <NuxtLink :to="localePath({ path: '/', hash: '#process' })">{{ t('workflow.title') }}</NuxtLink>
+            <a href="mailto:contact@corentinrenard.com">{{ t('nav.contact') }}</a>
+          </nav>
+        </details>
+        <button
+          class="utility-btn text-sm font-medium"
+          :aria-label="t('language.toggle')"
+          @click="toggleLocale"
+        >
+          {{ locale.toUpperCase() }}
+        </button>
+        <button
+          class="utility-btn"
+          :aria-label="t('theme.toggle')"
+          @click="toggleTheme"
+        >
+          <Icon
+            :name="colorMode.value === 'dark' ? 'mdi:weather-night' : 'mdi:weather-sunny'"
+            class="w-5 h-5"
+          />
+        </button>
+      </div>
     </header>
 
     <slot />
   </div>
 </template>
+
+<style scoped>
+.site-header {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  width: min(calc(100% - 2rem), 72rem);
+  align-items: center;
+  gap: 0.75rem;
+  transform: translateX(-50%);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 999px;
+  padding: 0.35rem;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(18px);
+}
+
+.brand-mark,
+.utility-btn {
+  display: inline-flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+
+.brand-mark {
+  background: var(--color-neutral-900);
+  overflow: hidden;
+  border: 1px solid var(--color-neutral-900);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.12);
+}
+
+.header-nav {
+  display: none;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.header-nav a {
+  border-radius: 999px;
+  padding: 0.65rem 0.85rem;
+  color: var(--color-neutral-500);
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.header-nav a:hover {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-900);
+}
+
+.header-tools {
+  position: relative;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.utility-btn {
+  border: 1px solid var(--color-neutral-200);
+  background: var(--color-neutral-100);
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.brand-mark:hover,
+.utility-btn:hover {
+  transform: translateY(-2px);
+}
+
+.utility-btn:hover {
+  border-color: var(--color-neutral-900);
+  background: var(--color-neutral-200);
+}
+
+.mobile-menu {
+  display: block;
+}
+
+.mobile-menu summary {
+  list-style: none;
+}
+
+.mobile-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-menu-panel {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  right: 0;
+  display: grid;
+  min-width: 10rem;
+  gap: 0.25rem;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 1rem;
+  padding: 0.35rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1rem 2.5rem rgba(23, 23, 23, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.mobile-menu-panel a {
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  color: var(--color-neutral-600);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.mobile-menu-panel a:hover {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-900);
+}
+
+:where(.dark) .site-header {
+  border-color: var(--color-neutral-800);
+  background: rgba(23, 23, 23, 0.82);
+}
+
+:where(.dark) .brand-mark {
+  border-color: var(--color-neutral-700);
+  background: var(--color-neutral-100);
+}
+
+:where(.dark) .brand-mark:hover {
+  border-color: var(--color-neutral-100);
+}
+
+:where(.dark) .header-nav a {
+  color: var(--color-neutral-400);
+}
+
+:where(.dark) .header-nav a:hover,
+:where(.dark) .utility-btn {
+  border-color: var(--color-neutral-800);
+  background: var(--color-neutral-800);
+  color: var(--color-neutral-100);
+}
+
+:where(.dark) .utility-btn:hover {
+  border-color: var(--color-neutral-100);
+  background: var(--color-neutral-700);
+}
+
+:where(.dark) .mobile-menu-panel {
+  border-color: var(--color-neutral-800);
+  background: rgba(23, 23, 23, 0.92);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.24);
+}
+
+:where(.dark) .mobile-menu-panel a {
+  color: var(--color-neutral-300);
+}
+
+:where(.dark) .mobile-menu-panel a:hover {
+  background: var(--color-neutral-800);
+  color: var(--color-neutral-100);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark,
+  .utility-btn {
+    transition: none;
+  }
+
+  .brand-mark:hover,
+  .utility-btn:hover {
+    transform: none;
+  }
+}
+
+@media (min-width: 720px) {
+  .header-nav {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: none;
+  }
+}
+
+@media (max-width: 719px) {
+  .site-header {
+    right: 1rem;
+    left: auto;
+    grid-template-columns: auto auto;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    gap: 0.35rem;
+    transform: none;
+  }
+
+  .header-tools {
+    gap: 0.25rem;
+  }
+}
+</style>

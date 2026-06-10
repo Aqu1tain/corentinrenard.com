@@ -2,6 +2,7 @@
 import { workItems } from '~/utils/works'
 
 const { t, locale } = useI18n()
+const localePath = useLocalePath()
 
 usePageSeo({
   title: () => t('seo.title'),
@@ -28,7 +29,7 @@ const handleSocialClick = async (social: typeof socials[number]) => {
 const hoveredSocial = ref<string | null>(null)
 const isTooltipVisible = (label: string) => hoveredSocial.value === label || copiedSocial.value === label
 const getTooltipText = (social: typeof socials[number]) => {
-  if (copiedSocial.value === social.label) return 'Copied!'
+  if (copiedSocial.value === social.label) return t('social.copied')
   return social.label
 }
 
@@ -39,191 +40,456 @@ const workflowSteps = [
 ]
 
 const pricingTypes = ['landing', 'showcase', 'ecommerce', 'custom'] as const
+const pricedOfferTypes = ['landing', 'showcase', 'ecommerce'] as const
+const faqItems = ['availability', 'location', 'stack', 'pricing'] as const
 
 const showVideo = ref(false)
-
-const isDesktop = ref(false)
-let mediaQuery: MediaQueryList | null = null
-
-onMounted(() => {
-  mediaQuery = window.matchMedia('(min-width: 640px)')
-  isDesktop.value = mediaQuery.matches
-  mediaQuery.addEventListener('change', onMediaChange)
-})
-
-onUnmounted(() => {
-  mediaQuery?.removeEventListener('change', onMediaChange)
-})
-
-const onMediaChange = (e: MediaQueryListEvent) => {
-  isDesktop.value = e.matches
+const currentYear = new Date().getFullYear()
+const siteUrl = 'https://corentinrenard.com'
+const localizedHomeUrl = () => {
+  const home = localePath('/')
+  return `${siteUrl}${home === '/' ? '' : home}`
 }
+const profileUrls = [
+  'https://www.linkedin.com/in/corentin-renard-web/',
+  'https://github.com/Aqu1tain',
+  'https://www.behance.net/corentin_fox',
+  'https://www.instagram.com/corentin_fox/',
+]
+const offerPrices = {
+  landing: 900,
+  showcase: 2500,
+  ecommerce: 4500,
+} as const
+
+useHead(() => ({
+  script: [
+    {
+      key: 'home-json-ld',
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebSite',
+            '@id': `${siteUrl}/#website`,
+            url: siteUrl,
+            name: t('name'),
+            inLanguage: locale.value === 'fr' ? 'fr-FR' : 'en-US',
+          },
+          {
+            '@type': 'Person',
+            '@id': `${siteUrl}/#person`,
+            name: t('name'),
+            url: siteUrl,
+            image: `${siteUrl}/apple-touch-icon.png`,
+            jobTitle: t('role'),
+            knowsLanguage: ['fr-FR', 'en-US'],
+            knowsAbout: ['UI/UX design', 'Nuxt', 'Vue', 'Figma', 'web development', 'maintenance'],
+            sameAs: profileUrls,
+          },
+          {
+            '@type': 'ProfessionalService',
+            '@id': `${siteUrl}/#service`,
+            name: `${t('name')} - ${t('role')}`,
+            url: localizedHomeUrl(),
+            image: `${siteUrl}/og-image.png`,
+            provider: { '@id': `${siteUrl}/#person` },
+            areaServed: { '@type': 'Country', name: 'France' },
+            availableLanguage: ['French', 'English'],
+            hasOfferCatalog: {
+              '@type': 'OfferCatalog',
+              name: t('pricing.title'),
+              itemListElement: pricedOfferTypes.map((type) => ({
+                '@type': 'Offer',
+                name: t(`pricing.types.${type}.title`),
+                description: t(`pricing.types.${type}.sentence`),
+                priceCurrency: 'EUR',
+                price: offerPrices[type],
+              })),
+            },
+          },
+          {
+            '@type': 'ProfilePage',
+            '@id': `${localizedHomeUrl()}#profile`,
+            url: localizedHomeUrl(),
+            isPartOf: { '@id': `${siteUrl}/#website` },
+            mainEntity: { '@id': `${siteUrl}/#person` },
+          },
+          {
+            '@type': 'FAQPage',
+            '@id': `${localizedHomeUrl()}#faq`,
+            mainEntity: faqItems.map((item) => ({
+              '@type': 'Question',
+              name: t(`faq.items.${item}.question`),
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: t(`faq.items.${item}.answer`),
+              },
+            })),
+          },
+        ],
+      }),
+    },
+  ],
+}))
 </script>
 
 <template>
   <div>
-    <main class="max-w-4xl mx-auto px-6 py-24 sm:py-32">
-      <section class="text-center mb-24">
-        <img
-          src="/apple-touch-icon.png"
-          alt="Corentin Renard"
-          class="w-36 h-36 rounded-full mx-auto mb-8 object-cover ring-4 ring-neutral-100 dark:ring-neutral-700"
-        />
-        <h1 class="font-display text-4xl sm:text-5xl mb-3">{{ t('name') }}</h1>
-        <p class="text-lg text-neutral-600 dark:text-neutral-400 mb-3">{{ t('role') }}</p>
-        <p class="text-sm text-neutral-400 dark:text-neutral-600 italic">{{ t('avatarJoke') }}</p>
+    <main class="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
+      <section class="hero-shell mb-28">
+        <div class="hero-copy">
+          <p class="section-kicker">{{ t('hero.kicker') }}</p>
+          <h1 class="hero-title">{{ t('name') }}</h1>
+          <p class="hero-role">{{ t('role') }}</p>
+          <p class="hero-intro">{{ t('hero.intro') }}</p>
 
-        <div class="flex justify-center gap-2 mt-10">
-          <component
-            :is="social.href ? 'a' : 'button'"
-            v-for="social in socials"
-            :key="social.label"
-            :href="social.href"
-            :target="social.href ? '_blank' : undefined"
-            :rel="social.href ? 'noopener noreferrer' : undefined"
-            :aria-label="social.label"
-            class="social-btn"
-            @click="handleSocialClick(social)"
-            @mouseenter="hoveredSocial = social.label"
-            @mouseleave="hoveredSocial = null"
-          >
-            <Transition v-if="social.action === 'copy'" name="icon-swap" mode="out-in">
-              <Icon v-if="copiedSocial === social.label" key="check" name="mdi:check" size="24" class="text-green-500" />
-              <Icon v-else key="icon" :name="social.icon" size="24" />
-            </Transition>
-            <Icon v-else :name="social.icon" size="24" />
-            <span class="social-tooltip" :class="{ visible: isTooltipVisible(social.label) }">
-              {{ getTooltipText(social) }}
-            </span>
-          </component>
+          <div class="hero-actions">
+            <a href="#works" class="primary-link">
+              <span>{{ t('hero.workCta') }}</span>
+              <Icon name="mdi:arrow-down" size="18" />
+            </a>
+            <a
+              :href="`/cv-${locale}.pdf`"
+              target="_blank"
+              class="secondary-link"
+            >
+              <Icon name="mdi:file-download-outline" size="20" />
+              <span>{{ t('cv.download') }}</span>
+            </a>
+          </div>
         </div>
+
+        <aside class="identity-panel" :aria-label="t('name')">
+          <div class="portrait-wrap">
+            <NuxtImg
+              src="/apple-touch-icon.png"
+              width="180"
+              height="180"
+              sizes="sm:88px md:320px"
+              alt="Corentin Renard"
+              class="portrait"
+            />
+          </div>
+          <div>
+            <p class="identity-label">{{ t('hero.availability') }}</p>
+            <p class="identity-note">{{ t('avatarJoke') }}</p>
+          </div>
+
+          <div class="social-grid">
+            <component
+              :is="social.href ? 'a' : 'button'"
+              v-for="social in socials"
+              :key="social.label"
+              :href="social.href"
+              :target="social.href ? '_blank' : undefined"
+              :rel="social.href ? 'noopener noreferrer' : undefined"
+              :aria-label="social.label"
+              class="social-btn"
+              @click="handleSocialClick(social)"
+              @mouseenter="hoveredSocial = social.label"
+              @mouseleave="hoveredSocial = null"
+              @focus="hoveredSocial = social.label"
+              @blur="hoveredSocial = null"
+            >
+              <Transition v-if="social.action === 'copy'" name="icon-swap" mode="out-in">
+                <Icon v-if="copiedSocial === social.label" key="check" name="mdi:check" size="22" class="text-emerald-500" />
+                <Icon v-else key="icon" :name="social.icon" size="22" />
+              </Transition>
+              <Icon v-else :name="social.icon" size="22" />
+              <span
+                class="social-tooltip"
+                :class="{ visible: isTooltipVisible(social.label) }"
+                :aria-live="social.action === 'copy' ? 'polite' : undefined"
+              >
+                {{ getTooltipText(social) }}
+              </span>
+            </component>
+          </div>
+        </aside>
       </section>
 
-      <section class="mb-24 text-center">
-        <a
-          :href="`/cv-${locale}.pdf`"
-          target="_blank"
-          class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-semibold text-neutral-900 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all"
-        >
-          <Icon name="mdi:file-download-outline" size="22" />
-          <span>{{ t('cv.download') }}</span>
-        </a>
-      </section>
-
-      <section class="mb-24">
-        <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('workflow.title') }}</h2>
-        <div class="space-y-2 sm:space-y-0 sm:flex sm:items-center sm:gap-2">
-          <template v-for="(step, index) in workflowSteps" :key="step.key">
-            <div class="workflow-card">
-              <div class="flex items-center gap-3 mb-4">
-                <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center text-sm font-semibold shrink-0">
-                  {{ index + 1 }}
-                </span>
-                <Icon :name="step.icon" size="24" class="text-neutral-400 dark:text-neutral-500" />
-              </div>
-              <h3 class="font-semibold mb-2">{{ t(`workflow.steps.${step.key}.title`) }}</h3>
-              <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                {{ t(`workflow.steps.${step.key}.description`) }}
-              </p>
-            </div>
-            <div v-if="index < workflowSteps.length - 1" class="flex justify-center py-1 sm:py-0 sm:px-1">
-              <Icon v-show="!isDesktop" name="mdi:chevron-down" size="20" class="text-neutral-400 dark:text-neutral-500" />
-              <Icon v-show="isDesktop" name="mdi:chevron-right" size="20" class="text-neutral-400 dark:text-neutral-500" />
-            </div>
-          </template>
+      <section id="process" class="section-block scroll-mt-28">
+        <div class="section-heading">
+          <p class="section-kicker">01</p>
+          <h2>{{ t('workflow.title') }}</h2>
         </div>
-      </section>
-
-      <section class="mb-24">
-        <h2 class="font-display text-2xl sm:text-3xl mb-2 text-center">{{ t('pricing.title') }}</h2>
-        <p class="text-sm text-neutral-500 text-center mb-10">{{ t('pricing.subtitle') }}</p>
-        <div class="grid sm:grid-cols-2 gap-4">
+        <div class="workflow-grid">
           <div
-            v-for="type in pricingTypes"
-            :key="type"
-            class="p-6 rounded-2xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
+            v-for="(step, index) in workflowSteps"
+            :key="step.key"
+            class="workflow-card"
           >
-            <h3 class="font-semibold text-neutral-600 dark:text-neutral-400 mb-2">{{ t(`pricing.types.${type}.title`) }}</h3>
-            <p class="text-2xl font-semibold">
-              {{ t(`pricing.types.${type}.price`) }}
-              <span v-if="type !== 'custom'" class="text-base font-normal text-neutral-400 dark:text-neutral-500 ml-0.5">&euro;</span>
-            </p>
+            <div class="card-topline">
+              <span>{{ String(index + 1).padStart(2, '0') }}</span>
+              <Icon :name="step.icon" size="24" />
+            </div>
+            <h3>{{ t(`workflow.steps.${step.key}.title`) }}</h3>
+            <p>{{ t(`workflow.steps.${step.key}.description`) }}</p>
           </div>
         </div>
       </section>
 
-      <section class="mb-24">
-        <h2 class="font-display text-2xl sm:text-3xl mb-10 text-center">{{ t('interview.title') }}</h2>
-        <div class="aspect-video rounded-2xl overflow-hidden relative">
+      <section class="section-block compact-block">
+        <div class="section-heading">
+          <p class="section-kicker">02</p>
+          <h2>{{ t('pricing.title') }}</h2>
+          <span>{{ t('pricing.subtitle') }}</span>
+        </div>
+        <div class="pricing-grid">
+          <div
+            v-for="type in pricingTypes"
+            :key="type"
+            class="pricing-card"
+          >
+            <p>{{ t(`pricing.types.${type}.title`) }}</p>
+            <strong>
+              {{ t(`pricing.types.${type}.sentence`) }}
+            </strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading">
+          <p class="section-kicker">03</p>
+          <h2>{{ t('faq.title') }}</h2>
+        </div>
+        <div class="faq-list">
+          <details
+            v-for="item in faqItems"
+            :key="item"
+            class="faq-item"
+          >
+            <summary>
+              <span>{{ t(`faq.items.${item}.question`) }}</span>
+              <Icon name="mdi:plus" size="20" />
+            </summary>
+            <p>{{ t(`faq.items.${item}.answer`) }}</p>
+          </details>
+        </div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-heading">
+          <p class="section-kicker">04</p>
+          <h2>{{ t('interview.title') }}</h2>
+        </div>
+        <div class="video-frame">
           <iframe
             v-if="showVideo"
             src="https://www.youtube.com/embed/DkTTzXJa1So?autoplay=1"
             title="Interview"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
-            class="w-full h-full"
+            class="h-full w-full"
           />
           <button v-else class="video-facade" @click="showVideo = true">
-            <img src="/interview-thumbnail.png" alt="Interview thumbnail" class="w-full h-full object-cover" />
+            <img src="/interview-thumbnail.png" alt="Interview thumbnail" class="h-full w-full object-cover" />
             <span class="video-play-btn">
-              <Icon name="logos:youtube-icon" size="56" />
+              <Icon name="mdi:youtube" size="58" />
             </span>
           </button>
         </div>
       </section>
 
-      <section id="works" class="mb-16 scroll-mt-12">
-        <h2 class="font-display text-2xl sm:text-3xl mb-12 text-center">{{ t('works.title') }}</h2>
-        <div class="space-y-6">
+      <section id="works" class="section-block scroll-mt-28">
+        <div class="section-heading works-heading">
+          <div>
+            <p class="section-kicker">05</p>
+            <h2>{{ t('works.title') }}</h2>
+          </div>
+          <p>{{ t('works.subtitle') }}</p>
+        </div>
+
+        <div class="works-list">
           <NuxtLink
-            v-for="work in workItems"
+            v-for="(work, index) in workItems"
             :key="work.slug"
-            :to="`/works/${work.slug}`"
-            class="work-row group block"
+            :to="localePath(`/works/${work.slug}`)"
+            class="work-row"
+            :style="{
+              '--work-accent': work.accent,
+            }"
           >
-            <h3
-              class="work-title"
-              :style="{
-                '--hover-font': work.font ?? 'inherit',
-              }"
-            >
-              <span class="work-title-text">
+            <div class="work-row-top">
+              <span>{{ String(index + 1).padStart(2, '0') }}</span>
+              <p>{{ work.year }} / {{ t(`works.types.${work.type}`) }}</p>
+              <Icon name="mdi:arrow-top-right" size="22" />
+            </div>
+            <h3 class="work-title">
+              <span class="work-title-track">
                 <span class="work-title-segment">{{ t(`works.items.${work.slug}.title`) }}</span>
                 <span class="work-title-segment" aria-hidden="true">{{ t(`works.items.${work.slug}.title`) }}</span>
               </span>
             </h3>
-            <p class="work-preview">{{ t(`works.items.${work.slug}.preview`) }}</p>
-            <p class="work-type">{{ t(`works.types.${work.type}`) }}</p>
+            <div class="work-row-bottom">
+              <p class="work-preview">{{ t(`works.items.${work.slug}.preview`) }}</p>
+              <div class="work-tags">
+                <span v-for="tag in work.stack" :key="tag">{{ tag }}</span>
+              </div>
+            </div>
           </NuxtLink>
         </div>
       </section>
     </main>
 
-    <footer class="text-center py-8 text-sm text-neutral-400 dark:text-neutral-600">
-      {{ new Date().getFullYear() }} Corentin Renard
+    <footer class="footer">
+      <span>{{ currentYear }} Corentin Renard</span>
+      <a href="mailto:contact@corentinrenard.com">contact@corentinrenard.com</a>
     </footer>
   </div>
 </template>
 
 <style scoped>
-.social-btn {
-  position: relative;
-  width: 3rem;
-  height: 3rem;
+.hero-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  min-height: calc(100vh - 8rem);
+  align-items: center;
+}
+
+.hero-copy {
+  max-width: 48rem;
+}
+
+.section-kicker {
+  margin-bottom: 1rem;
+  color: var(--color-neutral-500);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-family: var(--font-display), serif;
+  font-size: 4rem;
+  line-height: 0.95;
+  margin-bottom: 1rem;
+}
+
+.hero-role {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-neutral-700);
+}
+
+.hero-intro {
+  max-width: 38rem;
+  margin-top: 1rem;
+  color: var(--color-neutral-500);
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.hero-actions {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.primary-link,
+.secondary-link {
+  display: inline-flex;
+  min-height: 3rem;
   align-items: center;
   justify-content: center;
+  gap: 0.6rem;
+  border: 1px solid var(--color-neutral-900);
+  border-radius: 999px;
+  padding: 0.8rem 1.1rem;
+  font-weight: 700;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.primary-link {
+  background: var(--color-neutral-900);
+  color: white;
+}
+
+.secondary-link {
+  border-color: var(--color-neutral-200);
   border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-neutral-900);
+}
+
+.primary-link:hover,
+.secondary-link:hover {
+  transform: translateY(-2px);
+}
+
+.secondary-link:hover {
+  border-color: var(--color-neutral-900);
+  background: white;
+}
+
+.identity-panel {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 1.5rem;
+  padding: 1rem;
+  background:
+    linear-gradient(var(--color-neutral-100) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-neutral-100) 1px, transparent 1px),
+    var(--color-neutral-50);
+  background-size: 28px 28px;
+  overflow: visible;
+}
+
+.portrait-wrap {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: var(--color-neutral-900);
+}
+
+.portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.08);
+}
+
+.identity-label {
+  margin-bottom: 0.4rem;
+  font-weight: 800;
+}
+
+.identity-note {
+  color: var(--color-neutral-500);
+  line-height: 1.6;
+}
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.social-btn {
+  position: relative;
+  display: flex;
+  aspect-ratio: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  transition: background-color 0.15s;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .social-btn:hover {
-  background-color: var(--color-neutral-100);
-}
-
-:where(.dark) .social-btn:hover {
-  background-color: var(--color-neutral-800);
+  transform: translateY(-2px);
+  border-color: var(--color-neutral-900);
+  background-color: white;
 }
 
 .social-tooltip {
@@ -231,20 +497,16 @@ const onMediaChange = (e: MediaQueryListEvent) => {
   bottom: -2rem;
   left: 50%;
   transform: translateX(-50%) translateY(0.25rem);
+  z-index: 2;
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  background-color: var(--color-neutral-900);
+  color: white;
   font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: all 0.15s ease;
-  background-color: var(--color-neutral-800);
-  color: white;
-}
-
-:where(.dark) .social-tooltip {
-  background-color: var(--color-neutral-200);
-  color: var(--color-neutral-900);
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .social-tooltip.visible {
@@ -252,108 +514,396 @@ const onMediaChange = (e: MediaQueryListEvent) => {
   transform: translateX(-50%) translateY(0);
 }
 
-.workflow-card {
-  flex: 1;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  background-color: var(--color-neutral-50);
+.section-block {
+  margin-bottom: 7rem;
+}
+
+.compact-block {
+  margin-bottom: 6rem;
+}
+
+.section-heading {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.section-heading h2 {
+  font-family: var(--font-display), serif;
+  font-size: 2.7rem;
+  line-height: 1;
+}
+
+.section-heading span,
+.works-heading > p {
+  max-width: 30rem;
+  color: var(--color-neutral-500);
+  line-height: 1.7;
+}
+
+.workflow-grid,
+.pricing-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.workflow-card,
+.pricing-card {
   border: 1px solid var(--color-neutral-200);
-  transition: border-color 0.15s;
+  border-radius: 1rem;
+  background: rgba(250, 250, 250, 0.9);
+}
+
+.workflow-card {
+  min-height: 15rem;
+  padding: 1.25rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .workflow-card:hover {
-  border-color: var(--color-neutral-300);
+  transform: translateY(-3px);
+  border-color: var(--color-neutral-900);
+}
+
+.card-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  color: var(--color-neutral-500);
+}
+
+.card-topline span {
+  display: inline-flex;
+  width: 2.35rem;
+  height: 2.35rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--color-neutral-900);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.workflow-card h3 {
+  margin-bottom: 0.65rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.workflow-card p {
+  color: var(--color-neutral-600);
+  line-height: 1.7;
+}
+
+.pricing-card {
+  padding: 1.25rem;
+}
+
+.pricing-card p {
+  margin-bottom: 1rem;
+  color: var(--color-neutral-500);
+  font-weight: 700;
+}
+
+.pricing-card strong {
+  display: block;
+  font-size: 1.55rem;
+  line-height: 1.2;
+}
+
+.pricing-card span {
+  color: var(--color-neutral-500);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.faq-list {
+  display: grid;
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.faq-item summary {
+  display: flex;
+  min-height: 4.25rem;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--color-neutral-900);
+  font-weight: 800;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary svg {
+  flex: 0 0 auto;
+  color: var(--color-neutral-500);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.faq-item[open] summary svg {
+  color: var(--color-neutral-900);
+  transform: rotate(45deg);
+}
+
+.faq-item p {
+  max-width: 44rem;
+  padding: 0 2.75rem 1.35rem 0;
+  color: var(--color-neutral-600);
+  line-height: 1.75;
+}
+
+.video-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 1rem;
+  background: var(--color-neutral-100);
+}
+
+.video-facade {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.video-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+
+.video-facade:hover .video-play-btn {
+  transform: translate(-50%, -50%) scale(1.07);
+}
+
+.works-heading {
+  align-items: end;
+}
+
+.works-list {
+  display: grid;
+  border-top: 1px solid var(--color-neutral-200);
 }
 
 .work-row {
   display: block;
-  padding: 2rem 0;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-neutral-200);
   overflow: hidden;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.work-row:hover {
+  color: var(--work-accent);
+}
+
+.work-row-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-neutral-500);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.work-row-top p {
+  min-width: 0;
+}
+
+.work-row-top svg {
+  margin-left: auto;
+  opacity: 0.45;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.work-row:hover .work-row-top svg {
+  transform: translate(0.2rem, -0.2rem);
+  opacity: 1;
 }
 
 .work-title {
+  margin: 0.55rem 0 0.65rem;
   font-family: var(--font-display), serif;
-  font-weight: 700;
-  font-size: clamp(3rem, 8vw, 6rem);
-  line-height: 1.1;
-  color: var(--color-neutral-900);
+  font-size: clamp(3.5rem, 11vw, 8rem);
+  line-height: 0.9;
   white-space: nowrap;
-  margin: 0;
 }
 
-:where(.dark) .work-title {
-  color: var(--color-neutral-100);
-}
-
-.work-title-text {
+.work-title-track {
   display: inline-flex;
-  transition: color 0.2s;
+  min-width: max-content;
 }
 
 .work-title-segment {
   display: inline-block;
-  padding-right: 2rem;
+  padding-right: 3rem;
 }
 
 .work-title-segment + .work-title-segment {
   visibility: hidden;
 }
 
-.work-row:hover .work-title-segment + .work-title-segment {
-  visibility: visible;
+.work-row-bottom {
+  display: grid;
+  gap: 0.85rem;
 }
 
-.work-row:hover .work-title-text {
-  font-family: var(--hover-font);
-  animation: title-marquee 8s linear infinite;
+.work-preview {
+  max-width: 36rem;
+  color: var(--color-neutral-600);
+  line-height: 1.7;
+}
+
+.work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.work-tags span {
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  color: var(--color-neutral-600);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .work-row:hover .work-title-track {
+    animation: title-marquee 8s linear infinite;
+  }
+
+  .work-row:hover .work-title-segment + .work-title-segment {
+    visibility: visible;
+  }
 }
 
 @keyframes title-marquee {
   from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  to { transform: translateX(-50%); }
 }
 
-.work-type {
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-neutral-400);
-  margin-top: 0.25rem;
-}
-
-.work-preview {
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  color: var(--color-neutral-500);
   font-size: 0.875rem;
-  line-height: 1.5;
-  color: var(--color-neutral-500);
-  max-width: 32rem;
-  margin-top: 0.5rem;
-  transition: color 0.2s;
 }
 
-.work-row:hover .work-preview {
-  color: var(--color-neutral-600);
+.footer a:hover {
+  color: var(--color-neutral-900);
 }
 
+:where(.dark) .hero-role,
+:where(.dark) .workflow-card p,
+:where(.dark) .faq-item p,
 :where(.dark) .work-preview {
+  color: var(--color-neutral-300);
+}
+
+:where(.dark) .hero-intro,
+:where(.dark) .identity-note,
+:where(.dark) .section-heading span,
+:where(.dark) .works-heading > p,
+:where(.dark) .pricing-card p,
+:where(.dark) .work-row-top,
+:where(.dark) .work-tags span,
+:where(.dark) .footer {
   color: var(--color-neutral-400);
 }
 
-:where(.dark) .work-row:hover .work-preview {
-  color: var(--color-neutral-200);
+:where(.dark) .secondary-link,
+:where(.dark) .identity-panel,
+:where(.dark) .workflow-card,
+:where(.dark) .pricing-card {
+  border-color: var(--color-neutral-800);
+  background-color: rgba(38, 38, 38, 0.76);
 }
 
-:where(.dark) .work-type {
-  color: var(--color-neutral-500);
+:where(.dark) .identity-panel {
+  background:
+    linear-gradient(var(--color-neutral-800) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-neutral-800) 1px, transparent 1px),
+    var(--color-neutral-900);
+  background-size: 28px 28px;
 }
 
-:where(.dark) .workflow-card {
-  background-color: var(--color-neutral-800);
+:where(.dark) .secondary-link,
+:where(.dark) .social-btn {
+  background: rgba(38, 38, 38, 0.78);
+  color: var(--color-neutral-100);
+}
+
+:where(.dark) .secondary-link:hover {
+  border-color: var(--color-neutral-100);
+  background: var(--color-neutral-800);
+}
+
+:where(.dark) .social-btn {
+  border-color: var(--color-neutral-800);
+}
+
+:where(.dark) .social-btn:hover,
+:where(.dark) .workflow-card:hover {
+  border-color: var(--color-neutral-100);
+}
+
+:where(.dark) .social-tooltip {
+  background-color: var(--color-neutral-100);
+  color: var(--color-neutral-900);
+}
+
+:where(.dark) .video-frame {
+  border-color: var(--color-neutral-800);
+  background: var(--color-neutral-800);
+}
+
+:where(.dark) .works-list,
+:where(.dark) .work-row,
+:where(.dark) .faq-list,
+:where(.dark) .faq-item {
+  border-color: var(--color-neutral-800);
+}
+
+:where(.dark) .faq-item summary {
+  color: var(--color-neutral-100);
+}
+
+:where(.dark) .faq-item[open] summary svg {
+  color: var(--color-neutral-100);
+}
+
+:where(.dark) .work-tags span {
   border-color: var(--color-neutral-700);
 }
 
-:where(.dark) .workflow-card:hover {
-  border-color: var(--color-neutral-600);
+:where(.dark) .footer a:hover {
+  color: var(--color-neutral-100);
 }
 
 .icon-swap-enter-active,
@@ -371,23 +921,137 @@ const onMediaChange = (e: MediaQueryListEvent) => {
   transform: scale(0.5) rotate(90deg);
 }
 
-.video-facade {
-  position: absolute;
-  inset: 0;
-  cursor: pointer;
-  border: none;
-  padding: 0;
+@media (min-width: 640px) {
+  .hero-title {
+    font-size: 5.5rem;
+  }
+
+  .section-heading h2 {
+    font-size: 3.4rem;
+  }
+
+  .pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.video-play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: transform 0.15s;
+@media (min-width: 900px) {
+  .hero-shell {
+    grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.7fr);
+  }
+
+  .workflow-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .works-heading {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.42fr);
+  }
 }
 
-.video-facade:hover .video-play-btn {
-  transform: translate(-50%, -50%) scale(1.05);
+@media (max-width: 639px) {
+  .hero-shell {
+    min-height: auto;
+    align-items: start;
+  }
+
+  .hero-title {
+    font-size: 3.25rem;
+  }
+
+  .hero-intro {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .hero-actions a {
+    width: 100%;
+  }
+
+  .identity-panel {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+
+  .portrait-wrap {
+    border-radius: 0.8rem;
+  }
+
+  .social-grid {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.35rem;
+  }
+
+  .social-btn {
+    border-radius: 0.65rem;
+  }
+
+  .section-heading h2 {
+    font-size: 2.4rem;
+  }
+
+  .work-title {
+    font-size: clamp(3.2rem, 17vw, 5.2rem);
+    line-height: 0.95;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .work-title-track {
+    display: block;
+    min-width: 0;
+  }
+
+  .work-title-segment {
+    padding-right: 0;
+  }
+
+  .work-title-segment + .work-title-segment {
+    display: none;
+  }
+
+  .work-row {
+    padding: 1.15rem 0;
+  }
+
+  .work-row-top {
+    gap: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  .work-row-bottom {
+    gap: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primary-link,
+  .secondary-link,
+  .social-btn,
+  .workflow-card,
+  .work-row-top svg,
+  .video-play-btn {
+    transition: none;
+  }
+
+  .primary-link:hover,
+  .secondary-link:hover,
+  .social-btn:hover,
+  .workflow-card:hover,
+  .work-row:hover .work-row-top svg {
+    transform: none;
+  }
+
+  .work-row:hover .work-title-track {
+    animation: none;
+  }
+
+  .icon-swap-enter-active,
+  .icon-swap-leave-active {
+    transition: none;
+  }
 }
 </style>

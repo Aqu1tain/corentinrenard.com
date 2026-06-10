@@ -28,13 +28,14 @@ export default defineNuxtConfig({
   },
 
   i18n: {
+    baseUrl: 'https://corentinrenard.com',
     locales: [
       { code: 'en', language: 'en-US', file: 'en.json', name: 'English' },
       { code: 'fr', language: 'fr-FR', file: 'fr.json', name: 'Francais' },
     ],
     defaultLocale: 'en',
     langDir: 'locales',
-    strategy: 'no_prefix',
+    strategy: 'prefix_except_default',
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
@@ -44,6 +45,13 @@ export default defineNuxtConfig({
 
   site: {
     url: 'https://corentinrenard.com',
+  },
+
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ['/', '/fr', '/sitemap.xml', '/robots.txt'],
+    },
   },
 
   app: {

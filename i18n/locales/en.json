@@ -6,9 +6,25 @@
   "cv": {
     "download": "Download my CV"
   },
+  "nav": {
+    "menu": "Menu",
+    "contact": "Contact"
+  },
+  "language": {
+    "toggle": "Change language"
+  },
+  "social": {
+    "copied": "Copied!"
+  },
   "name": "Corentin Renard",
   "role": "Full Stack Web Designer",
   "avatarJoke": "Yes, my name means Fox. No, I didn't pick a fox as my profile picture.",
+  "hero": {
+    "kicker": "Independent web craft",
+    "intro": "I design and build sharp web experiences for founders, local brands and teams that need a site with taste, performance and real maintainability.",
+    "availability": "Available for new freelance projects",
+    "workCta": "View selected work"
+  },
   "workflow": {
     "title": "Workflow",
     "steps": {
@@ -32,19 +48,44 @@
     "types": {
       "landing": {
         "title": "Landing Page",
-        "price": "From 900"
+        "price": "From 900",
+        "sentence": "Landing page from €900"
       },
       "showcase": {
         "title": "Showcase Website",
-        "price": "From 2500"
+        "price": "From 2500",
+        "sentence": "Showcase website from €2,500"
       },
       "ecommerce": {
         "title": "E-commerce",
-        "price": "From 4500"
+        "price": "From 4500",
+        "sentence": "E-commerce website from €4,500"
       },
       "custom": {
         "title": "Custom Project",
-        "price": "On quote"
+        "price": "On quote",
+        "sentence": "Custom project quoted after scoping"
+      }
+    }
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": {
+      "availability": {
+        "question": "Are you available for new projects?",
+        "answer": "Yes, Corentin Renard is available for new freelance projects, especially scoped web missions where design, development and maintenance all matter."
+      },
+      "location": {
+        "question": "Where are you based?",
+        "answer": "Corentin Renard is a full stack web designer based in France and works remotely with French-speaking and English-speaking clients."
+      },
+      "stack": {
+        "question": "Which technologies do you use?",
+        "answer": "Projects are usually designed in Figma and built with Nuxt, Vue, Tailwind CSS and the technical choices that fit the website or CMS requirement."
+      },
+      "pricing": {
+        "question": "How much does a website cost?",
+        "answer": "A landing page starts from €900, a showcase website starts from €2,500, an e-commerce website starts from €4,500, and custom projects are quoted after scoping."
       }
     }
   },
@@ -61,9 +102,14 @@
     },
     "detail": {
       "back": "Back to home",
+      "articleLabel": "Case-study format",
+      "year": "Year",
+      "type": "Type",
+      "scope": "Scope",
       "context": "Context",
       "approach": "Approach",
-      "result": "Result"
+      "result": "Result",
+      "next": "Next project"
     },
     "items": {
       "case-study": {
@@ -93,6 +139,7 @@
     }
   },
   "theme": {
+    "toggle": "Change theme",
     "light": "Light",
     "dark": "Dark"
   }
