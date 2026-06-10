@@ -20,6 +20,11 @@ const toggleLocale = () => {
   const nextPath = switchLocalePath(nextLocale).split('#')[0] || '/'
   navigateTo(nextPath)
 }
+
+const mobileMenu = ref<HTMLDetailsElement | null>(null)
+const closeMobileMenu = () => {
+  if (mobileMenu.value) mobileMenu.value.open = false
+}
 </script>
 
 <template>
@@ -36,11 +41,11 @@ const toggleLocale = () => {
       </nav>
 
       <div class="header-tools">
-        <details class="mobile-menu">
+        <details ref="mobileMenu" class="mobile-menu">
           <summary class="utility-btn" :aria-label="t('nav.menu')">
             <Icon name="mdi:menu" class="w-5 h-5" />
           </summary>
-          <nav class="mobile-menu-panel" aria-label="Mobile navigation">
+          <nav class="mobile-menu-panel" aria-label="Mobile navigation" @click="closeMobileMenu">
             <NuxtLink :to="localePath({ path: '/', hash: '#works' })">{{ t('works.title') }}</NuxtLink>
             <NuxtLink :to="localePath({ path: '/', hash: '#process' })">{{ t('workflow.title') }}</NuxtLink>
             <a href="mailto:contact@corentinrenard.com">{{ t('nav.contact') }}</a>
