@@ -263,7 +263,7 @@ useHead(() => ({
           >
             <summary>
               <span>{{ t(`faq.items.${item}.question`) }}</span>
-              <Icon name="mdi:plus" size="20" />
+              <Icon name="mdi:plus" size="20" class="faq-icon" />
             </summary>
             <p>{{ t(`faq.items.${item}.answer`) }}</p>
           </details>
@@ -304,7 +304,7 @@ useHead(() => ({
 
         <div class="works-list">
           <NuxtLink
-            v-for="(work, index) in workItems"
+            v-for="work in workItems"
             :key="work.slug"
             :to="localePath(`/works/${work.slug}`)"
             class="work-row"
@@ -313,9 +313,8 @@ useHead(() => ({
             }"
           >
             <div class="work-row-top">
-              <span>{{ String(index + 1).padStart(2, '0') }}</span>
               <p>{{ work.year }} / {{ t(`works.types.${work.type}`) }}</p>
-              <Icon name="mdi:arrow-top-right" size="22" />
+              <Icon name="mdi:arrow-top-right" size="22" class="work-arrow" />
             </div>
             <h3 class="work-title">
               <span class="work-title-track">
@@ -643,13 +642,13 @@ useHead(() => ({
   display: none;
 }
 
-.faq-item summary svg {
+.faq-icon {
   flex: 0 0 auto;
   color: var(--color-neutral-500);
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.faq-item[open] summary svg {
+.faq-item[open] .faq-icon {
   color: var(--color-neutral-900);
   transform: rotate(45deg);
 }
@@ -700,6 +699,7 @@ useHead(() => ({
 }
 
 .work-row {
+  --accent: var(--work-accent);
   display: block;
   padding: 1.25rem 0;
   border-bottom: 1px solid var(--color-neutral-200);
@@ -708,8 +708,12 @@ useHead(() => ({
   transition: color 0.2s ease;
 }
 
+:where(.dark) .work-row {
+  --accent: color-mix(in srgb, var(--work-accent) 60%, white);
+}
+
 .work-row:hover {
-  color: var(--work-accent);
+  color: var(--accent);
 }
 
 .work-row-top {
@@ -727,13 +731,13 @@ useHead(() => ({
   min-width: 0;
 }
 
-.work-row-top svg {
+.work-arrow {
   margin-left: auto;
   opacity: 0.45;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.work-row:hover .work-row-top svg {
+.work-row:hover .work-arrow {
   transform: translate(0.2rem, -0.2rem);
   opacity: 1;
 }
@@ -893,7 +897,7 @@ useHead(() => ({
   color: var(--color-neutral-100);
 }
 
-:where(.dark) .faq-item[open] summary svg {
+:where(.dark) .faq-item[open] .faq-icon {
   color: var(--color-neutral-100);
 }
 
@@ -1031,7 +1035,7 @@ useHead(() => ({
   .secondary-link,
   .social-btn,
   .workflow-card,
-  .work-row-top svg,
+  .work-arrow,
   .video-play-btn {
     transition: none;
   }
@@ -1040,7 +1044,7 @@ useHead(() => ({
   .secondary-link:hover,
   .social-btn:hover,
   .workflow-card:hover,
-  .work-row:hover .work-row-top svg {
+  .work-row:hover .work-arrow {
     transform: none;
   }
 

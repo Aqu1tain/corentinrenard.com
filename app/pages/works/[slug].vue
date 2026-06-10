@@ -123,7 +123,7 @@ useHead(() => ({
           :alt="t(`works.items.${work.slug}.title`)"
         />
         <div v-else class="case-media-placeholder">
-          <span>{{ t(`works.types.${work.type}`) }}</span>
+          <span class="placeholder-tag">{{ t(`works.types.${work.type}`) }}</span>
           <Icon name="mdi:arrow-top-right" size="34" />
         </div>
       </figure>
@@ -160,16 +160,29 @@ useHead(() => ({
         v-if="nextWork"
         class="next-case"
         :to="localePath(`/works/${nextWork.slug}`)"
+        :style="{ '--work-accent': nextWork.accent }"
       >
-        <span>{{ t('works.detail.next') }}</span>
+        <span class="next-label">{{ t('works.detail.next') }}</span>
         <strong>{{ t(`works.items.${nextWork.slug}.title`) }}</strong>
-        <Icon name="mdi:arrow-right" size="22" />
+        <Icon name="mdi:arrow-right" size="22" class="next-icon" />
       </NuxtLink>
     </article>
   </main>
 </template>
 
 <style scoped>
+.case-page,
+.next-case {
+  --accent: var(--work-accent);
+  --accent-ink: color-mix(in srgb, var(--work-accent) 72%, black);
+}
+
+:where(.dark) .case-page,
+:where(.dark) .next-case {
+  --accent: color-mix(in srgb, var(--work-accent) 60%, white);
+  --accent-ink: color-mix(in srgb, var(--work-accent) 55%, white);
+}
+
 .case-page {
   width: min(calc(100% - 2.5rem), 68rem);
   margin: 0 auto;
@@ -203,7 +216,7 @@ useHead(() => ({
 
 .case-kicker {
   margin-bottom: 1.25rem;
-  color: var(--work-accent);
+  color: var(--accent-ink);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -283,26 +296,17 @@ useHead(() => ({
     linear-gradient(90deg, var(--color-neutral-200) 1px, transparent 1px),
     color-mix(in srgb, var(--work-accent) 10%, white);
   background-size: auto, 24px 24px, 24px 24px, auto;
-  color: var(--work-accent);
+  color: var(--accent-ink);
 }
 
-.case-media-placeholder span,
-.case-media-placeholder svg {
+.placeholder-tag {
   border: 1px solid color-mix(in srgb, var(--work-accent) 24%, transparent);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-}
-
-.case-media-placeholder span {
   padding: 0.45rem 0.7rem;
+  background: rgba(255, 255, 255, 0.72);
   font-size: 0.8rem;
   font-weight: 800;
   text-transform: uppercase;
-}
-
-.case-media-placeholder svg {
-  box-sizing: content-box;
-  padding: 0.55rem;
 }
 
 .case-content {
@@ -335,8 +339,8 @@ useHead(() => ({
 }
 
 .case-rail a:hover {
-  border-color: var(--work-accent);
-  color: var(--work-accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .case-prose {
@@ -352,7 +356,7 @@ useHead(() => ({
 .case-section > span {
   display: block;
   margin-bottom: 0.85rem;
-  color: var(--work-accent);
+  color: var(--accent-ink);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -383,10 +387,10 @@ useHead(() => ({
 }
 
 .next-case:hover {
-  color: var(--work-accent);
+  color: var(--accent);
 }
 
-.next-case span {
+.next-label {
   grid-column: 1 / -1;
   color: var(--color-neutral-500);
   font-size: 0.75rem;
@@ -402,7 +406,7 @@ useHead(() => ({
   line-height: 0.95;
 }
 
-.next-case svg {
+.next-icon {
   margin-bottom: 0.35rem;
 }
 
@@ -435,6 +439,10 @@ useHead(() => ({
     linear-gradient(90deg, var(--color-neutral-800) 1px, transparent 1px),
     color-mix(in srgb, var(--work-accent) 18%, var(--color-neutral-900));
   background-size: 24px 24px, 24px 24px, auto;
+}
+
+:where(.dark) .placeholder-tag {
+  background: rgba(23, 23, 23, 0.55);
 }
 
 @media (min-width: 860px) {

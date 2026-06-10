@@ -14,7 +14,7 @@ export const workItems: WorkItem[] = [
   {
     slug: 'case-study',
     type: 'case-study',
-    accent: '#111111',
+    accent: '#3554d1',
     year: '2026',
     stack: ['Strategy', 'UI/UX', 'Nuxt'],
     published: false,
