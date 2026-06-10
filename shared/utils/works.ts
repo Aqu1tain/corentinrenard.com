@@ -7,7 +7,6 @@ export interface WorkItem {
   accent: string
   year: string
   stack: string[]
-  contentPath: string
   published: boolean
 }
 
@@ -18,7 +17,6 @@ export const workItems: WorkItem[] = [
     accent: '#111111',
     year: '2026',
     stack: ['Strategy', 'UI/UX', 'Nuxt'],
-    contentPath: 'content/works/case-study.md',
     published: false,
   },
   {
@@ -27,7 +25,6 @@ export const workItems: WorkItem[] = [
     accent: '#18a058',
     year: '2026',
     stack: ['Figma', 'Integration', 'Support'],
-    contentPath: 'content/works/client-mission.md',
     published: false,
   },
   {
@@ -36,7 +33,6 @@ export const workItems: WorkItem[] = [
     accent: '#f06a2b',
     year: 'Lab',
     stack: ['Product', 'Prototype', 'Full stack'],
-    contentPath: 'content/works/personal-project.md',
     published: false,
   },
 ]

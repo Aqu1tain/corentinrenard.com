@@ -1,3 +1,5 @@
+import { SITE_URL } from '#shared/utils/site'
+
 interface SeoInput {
   title: () => string
   description: () => string
@@ -6,18 +8,13 @@ interface SeoInput {
   robots?: () => string
 }
 
-const SITE = 'https://corentinrenard.com'
-const OG_IMAGE = `${SITE}/og-image.png`
+const OG_IMAGE = `${SITE_URL}/og-image.png`
 
 export const usePageSeo = (input: SeoInput) => {
   const { t, locale } = useI18n()
-  const localePath = useLocalePath()
+  const localizedUrl = useLocalizedUrl()
   const name = () => t('name')
-  const path = () => {
-    const resolved = localePath(input.path?.() ?? '/')
-    return resolved === '/' ? '' : resolved
-  }
-  const url = () => `${SITE}${path()}`
+  const url = () => localizedUrl(input.path?.() ?? '/')
 
   useSeoMeta({
     title: input.title,

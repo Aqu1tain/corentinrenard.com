@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { workItems } from '~/utils/works'
+import { SITE_URL } from '#shared/utils/site'
+import { workItems } from '#shared/utils/works'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const localizedUrl = useLocalizedUrl()
 
 usePageSeo({
   title: () => t('seo.title'),
@@ -45,11 +47,6 @@ const faqItems = ['availability', 'location', 'stack', 'pricing'] as const
 
 const showVideo = ref(false)
 const currentYear = new Date().getFullYear()
-const siteUrl = 'https://corentinrenard.com'
-const localizedHomeUrl = () => {
-  const home = localePath('/')
-  return `${siteUrl}${home === '/' ? '' : home}`
-}
 const profileUrls = [
   'https://www.linkedin.com/in/corentin-renard-web/',
   'https://github.com/Aqu1tain',
@@ -72,17 +69,17 @@ useHead(() => ({
         '@graph': [
           {
             '@type': 'WebSite',
-            '@id': `${siteUrl}/#website`,
-            url: siteUrl,
+            '@id': `${SITE_URL}/#website`,
+            url: SITE_URL,
             name: t('name'),
             inLanguage: locale.value === 'fr' ? 'fr-FR' : 'en-US',
           },
           {
             '@type': 'Person',
-            '@id': `${siteUrl}/#person`,
+            '@id': `${SITE_URL}/#person`,
             name: t('name'),
-            url: siteUrl,
-            image: `${siteUrl}/apple-touch-icon.png`,
+            url: SITE_URL,
+            image: `${SITE_URL}/apple-touch-icon.png`,
             jobTitle: t('role'),
             knowsLanguage: ['fr-FR', 'en-US'],
             knowsAbout: ['UI/UX design', 'Nuxt', 'Vue', 'Figma', 'web development', 'maintenance'],
@@ -90,11 +87,11 @@ useHead(() => ({
           },
           {
             '@type': 'ProfessionalService',
-            '@id': `${siteUrl}/#service`,
+            '@id': `${SITE_URL}/#service`,
             name: `${t('name')} - ${t('role')}`,
-            url: localizedHomeUrl(),
-            image: `${siteUrl}/og-image.png`,
-            provider: { '@id': `${siteUrl}/#person` },
+            url: localizedUrl('/'),
+            image: `${SITE_URL}/og-image.png`,
+            provider: { '@id': `${SITE_URL}/#person` },
             areaServed: { '@type': 'Country', name: 'France' },
             availableLanguage: ['French', 'English'],
             hasOfferCatalog: {
@@ -111,14 +108,14 @@ useHead(() => ({
           },
           {
             '@type': 'ProfilePage',
-            '@id': `${localizedHomeUrl()}#profile`,
-            url: localizedHomeUrl(),
-            isPartOf: { '@id': `${siteUrl}/#website` },
-            mainEntity: { '@id': `${siteUrl}/#person` },
+            '@id': `${localizedUrl('/')}#profile`,
+            url: localizedUrl('/'),
+            isPartOf: { '@id': `${SITE_URL}/#website` },
+            mainEntity: { '@id': `${SITE_URL}/#person` },
           },
           {
             '@type': 'FAQPage',
-            '@id': `${localizedHomeUrl()}#faq`,
+            '@id': `${localizedUrl('/')}#faq`,
             mainEntity: faqItems.map((item) => ({
               '@type': 'Question',
               name: t(`faq.items.${item}.question`),

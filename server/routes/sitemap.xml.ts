@@ -1,6 +1,6 @@
-import { publishedWorkItems } from '../../app/utils/works'
+import { SITE_URL } from '#shared/utils/site'
+import { publishedWorkItems } from '#shared/utils/works'
 
-const SITE_URL = 'https://corentinrenard.com'
 const LOCALES = [
   { code: 'en', prefix: '' },
   { code: 'fr', prefix: '/fr' },

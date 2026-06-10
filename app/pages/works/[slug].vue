@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { findWorkBySlug, workItems } from '~/utils/works'
+import { SITE_URL } from '#shared/utils/site'
+import { findWorkBySlug, workItems } from '#shared/utils/works'
 
 const route = useRoute()
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const localizedUrl = useLocalizedUrl()
 const slug = Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug
 const work = findWorkBySlug(slug ?? '')
 
@@ -23,12 +25,7 @@ usePageSeo({
   robots: () => work.published ? 'index, follow' : 'noindex, follow',
 })
 
-const siteUrl = 'https://corentinrenard.com'
-const localizedWorkUrl = () => `${siteUrl}${localePath(`/works/${work.slug}`)}`
-const localizedHomeUrl = () => {
-  const home = localePath('/')
-  return `${siteUrl}${home === '/' ? '' : home}`
-}
+const localizedWorkUrl = () => localizedUrl(`/works/${work.slug}`)
 
 useHead(() => ({
   script: [
@@ -45,8 +42,8 @@ useHead(() => ({
             headline: t(`works.items.${work.slug}.title`),
             abstract: t(`works.items.${work.slug}.description`),
             inLanguage: locale.value === 'fr' ? 'fr-FR' : 'en-US',
-            author: { '@id': `${siteUrl}/#person` },
-            creator: { '@id': `${siteUrl}/#person` },
+            author: { '@id': `${SITE_URL}/#person` },
+            creator: { '@id': `${SITE_URL}/#person` },
             keywords: work.stack,
           },
           {
@@ -57,13 +54,13 @@ useHead(() => ({
                 '@type': 'ListItem',
                 position: 1,
                 name: t('name'),
-                item: localizedHomeUrl(),
+                item: localizedUrl('/'),
               },
               {
                 '@type': 'ListItem',
                 position: 2,
                 name: t('works.title'),
-                item: `${localizedHomeUrl()}#works`,
+                item: `${localizedUrl('/')}#works`,
               },
               {
                 '@type': 'ListItem',
@@ -90,7 +87,7 @@ useHead(() => ({
       {{ t('works.detail.back') }}
     </NuxtLink>
 
-    <article class="case-article" :data-content-source="work.contentPath">
+    <article class="case-article">
       <header class="case-hero">
         <div class="case-hero-main">
           <p class="case-kicker">{{ work.year }} / {{ t(`works.types.${work.type}`) }}</p>

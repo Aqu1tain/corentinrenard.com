@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite"
+import { SITE_URL } from './shared/utils/site'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -28,7 +29,7 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    baseUrl: 'https://corentinrenard.com',
+    baseUrl: SITE_URL,
     locales: [
       { code: 'en', language: 'en-US', file: 'en.json', name: 'English' },
       { code: 'fr', language: 'fr-FR', file: 'fr.json', name: 'Francais' },
@@ -41,10 +42,6 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_redirected',
       fallbackLocale: 'en',
     },
-  },
-
-  site: {
-    url: 'https://corentinrenard.com',
   },
 
   nitro: {
