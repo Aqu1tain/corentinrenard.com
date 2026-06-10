@@ -48,22 +48,18 @@
     "types": {
       "landing": {
         "title": "Landing Page",
-        "price": "From 900",
         "sentence": "Landing page from €900"
       },
       "showcase": {
         "title": "Showcase Website",
-        "price": "From 2500",
         "sentence": "Showcase website from €2,500"
       },
       "ecommerce": {
         "title": "E-commerce",
-        "price": "From 4500",
         "sentence": "E-commerce website from €4,500"
       },
       "custom": {
         "title": "Custom Project",
-        "price": "On quote",
         "sentence": "Custom project quoted after scoping"
       }
     }
@@ -139,8 +135,6 @@
     }
   },
   "theme": {
-    "toggle": "Change theme",
-    "light": "Light",
-    "dark": "Dark"
+    "toggle": "Change theme"
   }
 }

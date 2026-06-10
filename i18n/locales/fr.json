@@ -48,22 +48,18 @@
     "types": {
       "landing": {
         "title": "Landing Page",
-        "price": "À partir de 900",
         "sentence": "Landing page à partir de 900 €"
       },
       "showcase": {
         "title": "Site Vitrine",
-        "price": "À partir de 2500",
         "sentence": "Site vitrine à partir de 2 500 €"
       },
       "ecommerce": {
         "title": "E-commerce",
-        "price": "À partir de 4500",
         "sentence": "Site e-commerce à partir de 4 500 €"
       },
       "custom": {
         "title": "Projet Sur Mesure",
-        "price": "Sur devis",
         "sentence": "Projet sur mesure sur devis"
       }
     }
@@ -139,8 +135,6 @@
     }
   },
   "theme": {
-    "toggle": "Changer de thème",
-    "light": "Clair",
-    "dark": "Sombre"
+    "toggle": "Changer de thème"
   }
 }
