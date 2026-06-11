@@ -13,6 +13,19 @@ definePageMeta({
   scrollToTop: scrollToTopUnlessLocaleSwitch,
 })
 
+const { data: workDocs } = await useAsyncData(
+  () => `home-works-${locale.value}`,
+  () => queryCollection('works').where('path', 'LIKE', `/works/${locale.value}/%`).select('path', 'title', 'preview').all(),
+)
+
+const workMeta = computed(() => {
+  const bySlug = new Map<string, { title: string, preview: string }>()
+  for (const workDoc of workDocs.value ?? []) {
+    bySlug.set(workDoc.path.split('/').pop() ?? '', workDoc)
+  }
+  return bySlug
+})
+
 usePageSeo({
   title: () => t('seo.title'),
   description: () => t('seo.description'),
@@ -389,12 +402,12 @@ useHead(() => ({
             </div>
             <h3 class="work-title">
               <span class="work-title-track">
-                <span class="work-title-segment">{{ t(`works.items.${work.slug}.title`) }}</span>
-                <span class="work-title-segment" aria-hidden="true">{{ t(`works.items.${work.slug}.title`) }}</span>
+                <span class="work-title-segment">{{ workMeta.get(work.slug)?.title }}</span>
+                <span class="work-title-segment" aria-hidden="true">{{ workMeta.get(work.slug)?.title }}</span>
               </span>
             </h3>
             <div class="work-row-bottom">
-              <p class="work-preview">{{ t(`works.items.${work.slug}.preview`) }}</p>
+              <p class="work-preview">{{ workMeta.get(work.slug)?.preview }}</p>
               <div class="work-tags">
                 <span v-for="tag in work.stack" :key="tag">{{ tag }}</span>
               </div>

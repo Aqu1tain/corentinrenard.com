@@ -16,15 +16,30 @@ if (!work) {
 
 const currentIndex = workItems.findIndex(item => item.slug === work.slug)
 const nextWork = workItems[(currentIndex + 1) % workItems.length]
-const sections = ['context', 'approach', 'result'] as const
 
 definePageMeta({
   scrollToTop: scrollToTopUnlessLocaleSwitch,
 })
 
+const { data: doc } = await useAsyncData(
+  () => `work-${locale.value}-${work.slug}`,
+  () => queryCollection('works').path(`/works/${locale.value}/${work.slug}`).first(),
+)
+
+if (!doc.value) {
+  throw createError({ status: 404, statusText: 'Page Not Found' })
+}
+
+const { data: nextDoc } = await useAsyncData(
+  () => `work-next-${locale.value}-${nextWork?.slug}`,
+  () => queryCollection('works').path(`/works/${locale.value}/${nextWork?.slug}`).first(),
+)
+
+const toc = computed(() => doc.value?.body?.toc?.links ?? [])
+
 usePageSeo({
-  title: () => t(`works.items.${work.slug}.title`),
-  description: () => t(`works.items.${work.slug}.description`),
+  title: () => doc.value?.title ?? '',
+  description: () => doc.value?.description ?? '',
   type: 'article',
   path: () => `/works/${work.slug}`,
   robots: () => work.published ? 'index, follow' : 'noindex, follow',
@@ -38,7 +53,7 @@ let pageCtx: gsap.Context | undefined
 onMounted(() => {
   if (!pageEl.value) return
   pageCtx = gsap.context(() => {
-    applyVelocitySkew(pageEl.value!, '.case-meta, .case-media, .case-section, .next-case')
+    applyVelocitySkew(pageEl.value!, '.case-meta, .case-media, .case-prose, .next-case')
   }, pageEl.value)
 })
 
@@ -56,8 +71,8 @@ useHead(() => ({
             '@type': 'CreativeWork',
             '@id': `${localizedWorkUrl()}#creative-work`,
             url: localizedWorkUrl(),
-            headline: t(`works.items.${work.slug}.title`),
-            abstract: t(`works.items.${work.slug}.description`),
+            headline: doc.value?.title,
+            abstract: doc.value?.description,
             inLanguage: locale.value === 'fr' ? 'fr-FR' : 'en-US',
             author: { '@id': `${SITE_URL}/#person` },
             creator: { '@id': `${SITE_URL}/#person` },
@@ -82,7 +97,7 @@ useHead(() => ({
               {
                 '@type': 'ListItem',
                 position: 3,
-                name: t(`works.items.${work.slug}.title`),
+                name: doc.value?.title,
                 item: localizedWorkUrl(),
               },
             ],
@@ -110,9 +125,9 @@ useHead(() => ({
         <div class="case-hero-main">
           <p class="case-kicker">{{ work.year }} / {{ t(`works.types.${work.type}`) }}</p>
           <h1>
-            {{ t(`works.items.${work.slug}.title`) }}
+            {{ doc?.title }}
           </h1>
-          <p class="case-lede">{{ t(`works.items.${work.slug}.description`) }}</p>
+          <p class="case-lede">{{ doc?.description }}</p>
         </div>
 
         <dl class="case-meta">
@@ -138,7 +153,7 @@ useHead(() => ({
           width="1200"
           height="720"
           fit="cover"
-          :alt="t(`works.items.${work.slug}.title`)"
+          :alt="doc?.title ?? ''"
           data-speed="clamp(0.95)"
         />
         <div v-else class="case-media-placeholder">
@@ -150,29 +165,19 @@ useHead(() => ({
       <div class="case-content">
         <aside class="case-rail">
           <p>{{ t('works.detail.articleLabel') }}</p>
-          <nav aria-label="Case study sections">
+          <nav v-if="toc.length" aria-label="Case study sections">
             <a
-              v-for="section in sections"
-              :key="section"
-              :href="`#${section}`"
+              v-for="link in toc"
+              :key="link.id"
+              :href="`#${link.id}`"
             >
-              {{ t(`works.detail.${section}`) }}
+              {{ link.text }}
             </a>
           </nav>
         </aside>
 
-        <div class="case-prose">
-          <section
-            v-for="(key, index) in sections"
-            :id="key"
-            :key="key"
-            v-reveal
-            class="case-section"
-          >
-            <span>{{ String(index + 1).padStart(2, '0') }}</span>
-            <h2>{{ t(`works.detail.${key}`) }}</h2>
-            <p>{{ t(`works.items.${work.slug}.${key}`) }}</p>
-          </section>
+        <div v-reveal class="case-prose">
+          <ContentRenderer v-if="doc" :value="doc" />
         </div>
       </div>
 
@@ -184,7 +189,7 @@ useHead(() => ({
         :style="{ '--work-accent': nextWork.accent }"
       >
         <span class="next-label">{{ t('works.detail.next') }}</span>
-        <strong>{{ t(`works.items.${nextWork.slug}.title`) }}</strong>
+        <strong>{{ nextDoc?.title }}</strong>
         <Icon name="mdi:arrow-right" size="22" class="next-icon" />
       </NuxtLink>
     </article>
@@ -366,35 +371,42 @@ useHead(() => ({
 }
 
 .case-prose {
-  display: grid;
-  gap: 3rem;
   max-width: 48rem;
+  counter-reset: case-section;
 }
 
-.case-section {
-  scroll-margin-top: 7rem;
-}
-
-.case-section > span {
-  display: block;
-  margin-bottom: 0.85rem;
-  color: var(--accent-ink);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.case-section h2 {
+.case-prose :deep(h2) {
   margin-bottom: 1rem;
+  counter-increment: case-section;
+  scroll-margin-top: 7rem;
   font-family: var(--font-display), serif;
   font-size: clamp(2.5rem, 5vw, 4rem);
   line-height: 0.95;
 }
 
-.case-section p {
+.case-prose :deep(h2:not(:first-child)) {
+  margin-top: 3rem;
+}
+
+.case-prose :deep(h2)::before {
+  content: "0" counter(case-section);
+  display: block;
+  margin-bottom: 0.85rem;
+  color: var(--accent-ink);
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.case-prose :deep(p) {
   color: var(--color-neutral-600);
   font-size: 1.12rem;
   line-height: 1.9;
+}
+
+.case-prose :deep(p + p) {
+  margin-top: 1rem;
 }
 
 .next-case {
@@ -439,7 +451,7 @@ useHead(() => ({
 
 :where(.dark) .case-lede,
 :where(.dark) .case-meta dd,
-:where(.dark) .case-section p {
+:where(.dark) .case-prose :deep(p) {
   color: var(--color-neutral-400);
 }
 
@@ -515,7 +527,7 @@ useHead(() => ({
   }
 
   .case-lede,
-  .case-section p {
+  .case-prose :deep(p) {
     font-size: 1rem;
     line-height: 1.72;
   }
@@ -529,8 +541,8 @@ useHead(() => ({
     min-height: 14rem;
   }
 
-  .case-prose {
-    gap: 2.25rem;
+  .case-prose :deep(h2:not(:first-child)) {
+    margin-top: 2.25rem;
   }
 }
 </style>
