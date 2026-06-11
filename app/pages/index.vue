@@ -91,7 +91,7 @@ onMounted(async () => {
     split.chars.forEach((char, i) => {
       const at = 0.08 + i * 0.05
       tl.from(char, { yPercent: 120, duration: 0.5, ease: 'power3.out' }, at)
-      tl.to(char, { color: baseColor, duration: 0.25, ease: 'power1.out' }, at + 0.4)
+      tl.to(char, { color: baseColor, duration: 0.1, ease: 'none' }, at + 0.42)
     })
     tl.from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 }, 0.45)
   }, heroEl.value)
