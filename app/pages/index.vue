@@ -871,6 +871,10 @@ useHead(() => ({
   border-color: var(--color-neutral-100);
 }
 
+:where(.dark) .social-btn:hover {
+  background-color: var(--color-neutral-700);
+}
+
 :where(.dark) .card-topline > span {
   background: var(--color-neutral-100);
   color: var(--color-neutral-900);
