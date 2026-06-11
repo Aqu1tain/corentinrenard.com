@@ -8,12 +8,12 @@ export const applyVelocitySkew = (scope: HTMLElement, selector: string) => {
 
   gsap.set(targets, { transformOrigin: 'center center' })
   const setSkew = gsap.quickSetter(targets, 'skewY', 'deg')
-  const clampSkew = gsap.utils.clamp(-1.5, 1.5)
+  const clampSkew = gsap.utils.clamp(-1, 1)
   const proxy = { skew: 0 }
 
   ScrollTrigger.create({
     onUpdate(self) {
-      const skew = clampSkew(self.getVelocity() / -400)
+      const skew = clampSkew(self.getVelocity() / -550)
       if (Math.abs(skew) > Math.abs(proxy.skew)) {
         proxy.skew = skew
         gsap.to(proxy, {
