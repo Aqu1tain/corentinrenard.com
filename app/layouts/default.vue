@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollSmoother } from 'gsap/ScrollSmoother'
+
 const { t, locale } = useI18n()
 const colorMode = useColorMode()
 const localePath = useLocalePath()
@@ -25,6 +29,19 @@ const mobileMenu = ref<HTMLDetailsElement | null>(null)
 const closeMobileMenu = () => {
   if (mobileMenu.value) mobileMenu.value.open = false
 }
+
+let smoother: ScrollSmoother | null = null
+
+onMounted(() => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
+  smoother = ScrollSmoother.create({ smooth: 0.8 })
+})
+
+onUnmounted(() => {
+  smoother?.kill()
+  smoother = null
+})
 </script>
 
 <template>
@@ -71,7 +88,11 @@ const closeMobileMenu = () => {
       </div>
     </header>
 
-    <slot />
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <slot />
+      </div>
+    </div>
   </div>
 </template>
 
