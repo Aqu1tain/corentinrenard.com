@@ -12,12 +12,13 @@ export interface WorkItem {
 
 export const workItems: WorkItem[] = [
   {
-    slug: 'case-study',
+    slug: 'les-chemins-du-pain',
     type: 'case-study',
-    accent: '#3554d1',
-    year: '2026',
-    stack: ['Strategy', 'UI/UX', 'Nuxt'],
-    published: false,
+    image: '/works/les-chemins-du-pain.jpg',
+    accent: '#8a5a23',
+    year: '2025',
+    stack: ['UI/UX', 'Nuxt', 'Leaflet'],
+    published: true,
   },
   {
     slug: 'client-mission',
