@@ -399,7 +399,7 @@ useHead(() => ({
   border-radius: 999px;
   padding: 0.8rem 1.1rem;
   font-weight: 700;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .primary-link {
@@ -411,11 +411,6 @@ useHead(() => ({
   border-color: var(--color-neutral-200);
   background: rgba(255, 255, 255, 0.72);
   color: var(--color-neutral-900);
-}
-
-.primary-link:hover,
-.secondary-link:hover {
-  transform: translateY(-2px);
 }
 
 .secondary-link:hover {
@@ -552,11 +547,10 @@ useHead(() => ({
 .workflow-card {
   min-height: 15rem;
   padding: 1.25rem;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .workflow-card:hover {
-  transform: translateY(-3px);
   border-color: var(--color-neutral-900);
 }
 
@@ -1045,10 +1039,7 @@ useHead(() => ({
     transition: none;
   }
 
-  .primary-link:hover,
-  .secondary-link:hover,
   .social-btn:hover,
-  .workflow-card:hover,
   .work-row:hover .work-arrow {
     transform: none;
   }

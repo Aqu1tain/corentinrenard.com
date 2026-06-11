@@ -108,7 +108,7 @@ const closeMobileMenu = () => {
   background: var(--color-neutral-900);
   overflow: hidden;
   border: 1px solid var(--color-neutral-900);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .brand-mark img {
@@ -147,12 +147,7 @@ const closeMobileMenu = () => {
 .utility-btn {
   border: 1px solid var(--color-neutral-200);
   background: var(--color-neutral-100);
-  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.brand-mark:hover,
-.utility-btn:hover {
-  transform: translateY(-2px);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .utility-btn:hover {
@@ -249,11 +244,6 @@ const closeMobileMenu = () => {
   .brand-mark,
   .utility-btn {
     transition: none;
-  }
-
-  .brand-mark:hover,
-  .utility-btn:hover {
-    transform: none;
   }
 }
 
