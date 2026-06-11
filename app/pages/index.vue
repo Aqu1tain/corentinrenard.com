@@ -82,9 +82,9 @@ onMounted(async () => {
     const title = heroEl.value?.querySelector<HTMLElement>('.hero-title')
     if (!title) return
     const baseColor = getComputedStyle(title).color
-    const accents = workItems.map((work) => work.accent)
+    const introColors = ['#3554d1', '#d6336c', '#18a058', '#7048e8', '#f06a2b', '#0b7285']
     const split = SplitText.create(title, { type: 'chars', mask: 'chars' })
-    split.chars.forEach((char, i) => gsap.set(char, { color: accents[i % accents.length] }))
+    split.chars.forEach((char, i) => gsap.set(char, { color: introColors[i % introColors.length] }))
 
     const tl = gsap.timeline({ onComplete: () => split.revert() })
     tl.from('.section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
@@ -407,6 +407,8 @@ useHead(() => ({
   font-size: 4rem;
   line-height: 0.95;
   margin-bottom: 1rem;
+  font-kerning: none;
+  font-variant-ligatures: none;
 }
 
 .hero-role {
