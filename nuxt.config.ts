@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
+    '@nuxt/content',
     '@nuxt/icon',
     '@nuxtjs/color-mode',
     '@nuxtjs/i18n',
@@ -20,6 +21,10 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [tailwindcss()],
+  },
+
+  content: {
+    experimental: { nativeSqlite: true },
   },
 
   colorMode: {
