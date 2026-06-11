@@ -89,7 +89,7 @@ onMounted(async () => {
     gsap.timeline({ onComplete: () => split.revert() })
       .from('.section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
       .from(split.chars, { yPercent: 120, duration: 0.8, ease: 'power3.out', stagger: 0.035 }, 0.08)
-      .to(split.chars, { color: baseColor, duration: 0.6, ease: 'power1.inOut', stagger: 0.03 }, '-=0.5')
+      .to(split.chars, { color: baseColor, duration: 0.3, ease: 'power1.out', stagger: 0.035 }, 0.88)
       .from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 }, 0.45)
   }, heroEl.value)
 })
