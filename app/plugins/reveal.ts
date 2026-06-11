@@ -15,9 +15,14 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   nuxtApp.hook('page:transition:finish', () => ScrollTrigger.refresh())
 
+  let localeSwitching = false
+  useRouter().beforeEach((to, from) => {
+    localeSwitching = isLocaleSwitch(to, from)
+  })
+
   nuxtApp.vueApp.directive<HTMLElement, number | undefined>('reveal', {
     mounted(el, binding) {
-      if (reduceMotion) return
+      if (reduceMotion || localeSwitching) return
       gsap.set(el, { autoAlpha: 0, y: 20 })
       tweens.set(el, gsap.to(el, {
         autoAlpha: 1,
