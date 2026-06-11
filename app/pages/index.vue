@@ -216,13 +216,12 @@ useHead(() => ({
         </div>
         <div class="workflow-grid">
           <div
-            v-for="(step, index) in workflowSteps"
+            v-for="step in workflowSteps"
             :key="step.key"
             class="workflow-card"
           >
             <div class="card-topline">
-              <span>{{ String(index + 1).padStart(2, '0') }}</span>
-              <Icon :name="step.icon" size="24" />
+              <span><Icon :name="step.icon" size="20" /></span>
             </div>
             <h3>{{ t(`workflow.steps.${step.key}.title`) }}</h3>
             <p>{{ t(`workflow.steps.${step.key}.description`) }}</p>
@@ -411,7 +410,6 @@ useHead(() => ({
 
 .secondary-link {
   border-color: var(--color-neutral-200);
-  border-radius: 0.75rem;
   background: rgba(255, 255, 255, 0.72);
   color: var(--color-neutral-900);
 }
@@ -564,14 +562,10 @@ useHead(() => ({
 }
 
 .card-topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 2.5rem;
-  color: var(--color-neutral-500);
 }
 
-.card-topline span {
+.card-topline > span {
   display: inline-flex;
   width: 2.35rem;
   height: 2.35rem;
@@ -580,8 +574,6 @@ useHead(() => ({
   border-radius: 999px;
   background: var(--color-neutral-900);
   color: white;
-  font-size: 0.75rem;
-  font-weight: 800;
 }
 
 .workflow-card h3 {
@@ -609,12 +601,6 @@ useHead(() => ({
   display: block;
   font-size: 1.55rem;
   line-height: 1.2;
-}
-
-.pricing-card span {
-  color: var(--color-neutral-500);
-  font-size: 1rem;
-  font-weight: 500;
 }
 
 .faq-list {
@@ -874,6 +860,11 @@ useHead(() => ({
 :where(.dark) .social-btn:hover,
 :where(.dark) .workflow-card:hover {
   border-color: var(--color-neutral-100);
+}
+
+:where(.dark) .card-topline > span {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-900);
 }
 
 :where(.dark) .social-tooltip {
