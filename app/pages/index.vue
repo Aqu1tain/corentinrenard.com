@@ -80,10 +80,35 @@ onMounted(async () => {
 
   heroCtx = gsap.context(() => {
     const title = heroEl.value?.querySelector<HTMLElement>('.hero-title')
-    if (!title) return
+    const textNode = title?.firstChild
+    if (!title || !textNode) return
+
+    const text = textNode.textContent ?? ''
+    const range = document.createRange()
+    const kernedRects: DOMRect[] = []
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === ' ') continue
+      range.setStart(textNode, i)
+      range.setEnd(textNode, i + 1)
+      kernedRects.push(range.getBoundingClientRect())
+    }
+
     const baseColor = getComputedStyle(title).color
     const introColors = ['#3554d1', '#d6336c', '#18a058', '#7048e8', '#f06a2b', '#0b7285']
     const split = SplitText.create(title, { type: 'chars', mask: 'chars' })
+
+    const splitRects = split.chars.map((char) => char.getBoundingClientRect())
+    const sameTop = (rects: DOMRect[]) => rects.every((rect) => Math.abs(rect.top - (rects[0]?.top ?? 0)) < 2)
+    if (kernedRects.length === split.chars.length && sameTop(kernedRects) && sameTop(splitRects)) {
+      let previousDelta = 0
+      split.chars.forEach((char, i) => {
+        const delta = (kernedRects[i]?.left ?? 0) - (splitRects[i]?.left ?? 0)
+        const wrapper = (char.parentElement ?? char) as HTMLElement
+        wrapper.style.marginLeft = `${delta - previousDelta}px`
+        previousDelta = delta
+      })
+    }
+
     split.chars.forEach((char, i) => gsap.set(char, { color: introColors[i % introColors.length] }))
 
     const tl = gsap.timeline({ onComplete: () => split.revert() })
@@ -407,7 +432,6 @@ useHead(() => ({
   font-size: 4rem;
   line-height: 0.95;
   margin-bottom: 1rem;
-  font-kerning: none;
   font-variant-ligatures: none;
 }
 
