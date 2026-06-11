@@ -86,11 +86,14 @@ onMounted(async () => {
     const split = SplitText.create(title, { type: 'chars', mask: 'chars' })
     split.chars.forEach((char, i) => gsap.set(char, { color: accents[i % accents.length] }))
 
-    gsap.timeline({ onComplete: () => split.revert() })
-      .from('.section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
-      .from(split.chars, { yPercent: 120, duration: 0.8, ease: 'power3.out', stagger: 0.035 }, 0.08)
-      .to(split.chars, { color: baseColor, duration: 0.3, ease: 'power1.out', stagger: 0.035 }, 0.88)
-      .from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 }, 0.45)
+    const tl = gsap.timeline({ onComplete: () => split.revert() })
+    tl.from('.section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
+    split.chars.forEach((char, i) => {
+      const at = 0.08 + i * 0.05
+      tl.from(char, { yPercent: 120, duration: 0.5, ease: 'power3.out' }, at)
+      tl.to(char, { color: baseColor, duration: 0.25, ease: 'power1.out' }, at + 0.4)
+    })
+    tl.from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 }, 0.45)
   }, heroEl.value)
 })
 
