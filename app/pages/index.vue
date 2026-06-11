@@ -675,6 +675,7 @@ useHead(() => ({
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  color: #f00;
   transition: transform 0.2s ease;
 }
 
