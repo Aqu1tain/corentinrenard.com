@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { SITE_URL } from '#shared/utils/site'
 import { workItems } from '#shared/utils/works'
@@ -67,62 +68,92 @@ const offerPrices = {
   ecommerce: 4500,
 } as const
 
-const heroEl = ref<HTMLElement | null>(null)
+const pageEl = ref<HTMLElement | null>(null)
 const localeSwitching = useState('locale-switching', () => false)
-let heroCtx: gsap.Context | undefined
+let pageCtx: gsap.Context | undefined
+
+const buildHeroIntro = (scope: HTMLElement) => {
+  const title = scope.querySelector<HTMLElement>('.hero-title')
+  const textNode = title?.firstChild
+  if (!title || !textNode) return
+
+  const text = textNode.textContent ?? ''
+  const range = document.createRange()
+  const kernedRects: DOMRect[] = []
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === ' ') continue
+    range.setStart(textNode, i)
+    range.setEnd(textNode, i + 1)
+    kernedRects.push(range.getBoundingClientRect())
+  }
+
+  const baseColor = getComputedStyle(title).color
+  const introColors = ['#3554d1', '#d6336c', '#18a058', '#7048e8', '#f06a2b', '#0b7285']
+  const split = SplitText.create(title, { type: 'chars', mask: 'chars' })
+
+  const splitRects = split.chars.map((char) => char.getBoundingClientRect())
+  const sameTop = (rects: DOMRect[]) => rects.every((rect) => Math.abs(rect.top - (rects[0]?.top ?? 0)) < 2)
+  if (kernedRects.length === split.chars.length && sameTop(kernedRects) && sameTop(splitRects)) {
+    let previousDelta = 0
+    split.chars.forEach((char, i) => {
+      const delta = (kernedRects[i]?.left ?? 0) - (splitRects[i]?.left ?? 0)
+      const wrapper = (char.parentElement ?? char) as HTMLElement
+      wrapper.style.marginLeft = `${delta - previousDelta}px`
+      previousDelta = delta
+    })
+  }
+
+  split.chars.forEach((char, i) => gsap.set(char, { color: introColors[i % introColors.length] }))
+
+  const tl = gsap.timeline({ onComplete: () => split.revert() })
+  tl.from('.hero-copy .section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
+  split.chars.forEach((char, i) => {
+    const at = 0.08 + i * 0.05
+    tl.from(char, { yPercent: 120, duration: 0.5, ease: 'power3.out' }, at)
+    tl.to(char, { color: baseColor, duration: 0.1, ease: 'none' }, at + 0.42)
+  })
+  tl.from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 })
+}
+
+const buildWorkRowSkew = (scope: HTMLElement) => {
+  const rows = gsap.utils.toArray<HTMLElement>('.work-row', scope)
+  if (!rows.length) return
+
+  gsap.set(rows, { transformOrigin: 'center center' })
+  const setSkew = gsap.quickSetter(rows, 'skewY', 'deg')
+  const clampSkew = gsap.utils.clamp(-1.5, 1.5)
+  const proxy = { skew: 0 }
+
+  ScrollTrigger.create({
+    onUpdate(self) {
+      const skew = clampSkew(self.getVelocity() / -400)
+      if (Math.abs(skew) > Math.abs(proxy.skew)) {
+        proxy.skew = skew
+        gsap.to(proxy, {
+          skew: 0,
+          duration: 0.7,
+          ease: 'power3',
+          overwrite: true,
+          onUpdate: () => setSkew(proxy.skew),
+        })
+      }
+    },
+  })
+}
 
 onMounted(async () => {
-  if (localeSwitching.value) return
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  gsap.registerPlugin(SplitText)
+  gsap.registerPlugin(ScrollTrigger, SplitText)
   await document.fonts.ready
-  if (!heroEl.value) return
+  if (!pageEl.value) return
 
-  heroCtx = gsap.context(() => {
-    const title = heroEl.value?.querySelector<HTMLElement>('.hero-title')
-    const textNode = title?.firstChild
-    if (!title || !textNode) return
-
-    const text = textNode.textContent ?? ''
-    const range = document.createRange()
-    const kernedRects: DOMRect[] = []
-    for (let i = 0; i < text.length; i++) {
-      if (text[i] === ' ') continue
-      range.setStart(textNode, i)
-      range.setEnd(textNode, i + 1)
-      kernedRects.push(range.getBoundingClientRect())
-    }
-
-    const baseColor = getComputedStyle(title).color
-    const introColors = ['#3554d1', '#d6336c', '#18a058', '#7048e8', '#f06a2b', '#0b7285']
-    const split = SplitText.create(title, { type: 'chars', mask: 'chars' })
-
-    const splitRects = split.chars.map((char) => char.getBoundingClientRect())
-    const sameTop = (rects: DOMRect[]) => rects.every((rect) => Math.abs(rect.top - (rects[0]?.top ?? 0)) < 2)
-    if (kernedRects.length === split.chars.length && sameTop(kernedRects) && sameTop(splitRects)) {
-      let previousDelta = 0
-      split.chars.forEach((char, i) => {
-        const delta = (kernedRects[i]?.left ?? 0) - (splitRects[i]?.left ?? 0)
-        const wrapper = (char.parentElement ?? char) as HTMLElement
-        wrapper.style.marginLeft = `${delta - previousDelta}px`
-        previousDelta = delta
-      })
-    }
-
-    split.chars.forEach((char, i) => gsap.set(char, { color: introColors[i % introColors.length] }))
-
-    const tl = gsap.timeline({ onComplete: () => split.revert() })
-    tl.from('.section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
-    split.chars.forEach((char, i) => {
-      const at = 0.08 + i * 0.05
-      tl.from(char, { yPercent: 120, duration: 0.5, ease: 'power3.out' }, at)
-      tl.to(char, { color: baseColor, duration: 0.1, ease: 'none' }, at + 0.42)
-    })
-    tl.from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 })
-  }, heroEl.value)
+  pageCtx = gsap.context(() => {
+    if (!localeSwitching.value) buildHeroIntro(pageEl.value!)
+    buildWorkRowSkew(pageEl.value!)
+  }, pageEl.value)
 })
 
-onUnmounted(() => heroCtx?.revert())
+onUnmounted(() => pageCtx?.revert())
 
 useHead(() => ({
   script: [
@@ -198,10 +229,10 @@ useHead(() => ({
 </script>
 
 <template>
-  <div>
+  <div ref="pageEl">
     <main class="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
       <section class="hero-shell mb-28">
-        <div ref="heroEl" class="hero-copy">
+        <div class="hero-copy">
           <p class="section-kicker">{{ t('hero.kicker') }}</p>
           <h1 class="hero-title">{{ t('name') }}</h1>
           <p class="hero-role">{{ t('role') }}</p>
