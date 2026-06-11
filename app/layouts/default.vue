@@ -32,13 +32,27 @@ const closeMobileMenu = () => {
 
 let smoother: ScrollSmoother | null = null
 
+const onAnchorClick = (event: MouseEvent) => {
+  if (!smoother) return
+  const anchor = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]')
+  if (!anchor) return
+  const target = document.querySelector(anchor.getAttribute('href') ?? '')
+  if (!target) return
+  event.preventDefault()
+  const margin = Number.parseFloat(getComputedStyle(target).scrollMarginTop) || 0
+  smoother.scrollTo(target, true, `top ${margin}px`)
+  history.pushState(null, '', anchor.getAttribute('href') ?? '')
+}
+
 onMounted(() => {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
   smoother = ScrollSmoother.create({ smooth: 0.8 })
+  document.addEventListener('click', onAnchorClick)
 })
 
 onUnmounted(() => {
+  document.removeEventListener('click', onAnchorClick)
   smoother?.kill()
   smoother = null
 })
