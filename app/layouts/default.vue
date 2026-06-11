@@ -31,6 +31,13 @@ const closeMobileMenu = () => {
 }
 
 let smoother: ScrollSmoother | null = null
+let effectTriggers: ScrollTrigger[] = []
+let unhookEffects: (() => void) | undefined
+
+const applyEffects = () => {
+  effectTriggers.forEach((trigger) => trigger.kill())
+  effectTriggers = smoother?.effects('[data-speed], [data-lag]') ?? []
+}
 
 const onAnchorClick = (event: MouseEvent) => {
   if (!smoother) return
@@ -48,11 +55,15 @@ onMounted(() => {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
   smoother = ScrollSmoother.create({ smooth: 0.8 })
+  applyEffects()
+  unhookEffects = useNuxtApp().hook('page:transition:finish', applyEffects)
   document.addEventListener('click', onAnchorClick)
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', onAnchorClick)
+  unhookEffects?.()
+  effectTriggers.forEach((trigger) => trigger.kill())
   smoother?.kill()
   smoother = null
 })

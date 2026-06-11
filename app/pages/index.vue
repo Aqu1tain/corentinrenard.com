@@ -232,6 +232,7 @@ useHead(() => ({
               sizes="sm:88px md:320px"
               alt="Corentin Renard"
               class="portrait"
+              data-lag="0.15"
             />
           </div>
           <div>
@@ -349,7 +350,7 @@ useHead(() => ({
             class="h-full w-full"
           />
           <button v-else class="video-facade" @click="showVideo = true">
-            <img src="/interview-thumbnail.png" alt="Interview thumbnail" class="h-full w-full object-cover" />
+            <img src="/interview-thumbnail.png" alt="Interview thumbnail" class="h-full w-full object-cover" data-speed="0.97" />
             <span class="video-play-btn">
               <Icon name="mdi:youtube" size="58" />
             </span>
@@ -748,6 +749,10 @@ useHead(() => ({
   cursor: pointer;
   border: none;
   padding: 0;
+}
+
+.video-facade img {
+  scale: 1.08;
 }
 
 .video-play-btn {
