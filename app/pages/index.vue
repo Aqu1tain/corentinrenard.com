@@ -115,32 +115,6 @@ const buildHeroIntro = (scope: HTMLElement) => {
   tl.from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 })
 }
 
-const buildWorkRowSkew = (scope: HTMLElement) => {
-  const rows = gsap.utils.toArray<HTMLElement>('.work-row', scope)
-  if (!rows.length) return
-
-  gsap.set(rows, { transformOrigin: 'center center' })
-  const setSkew = gsap.quickSetter(rows, 'skewY', 'deg')
-  const clampSkew = gsap.utils.clamp(-1.5, 1.5)
-  const proxy = { skew: 0 }
-
-  ScrollTrigger.create({
-    onUpdate(self) {
-      const skew = clampSkew(self.getVelocity() / -400)
-      if (Math.abs(skew) > Math.abs(proxy.skew)) {
-        proxy.skew = skew
-        gsap.to(proxy, {
-          skew: 0,
-          duration: 0.7,
-          ease: 'power3',
-          overwrite: true,
-          onUpdate: () => setSkew(proxy.skew),
-        })
-      }
-    },
-  })
-}
-
 onMounted(async () => {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   gsap.registerPlugin(ScrollTrigger, SplitText)
@@ -149,7 +123,7 @@ onMounted(async () => {
 
   pageCtx = gsap.context(() => {
     if (!localeSwitching.value) buildHeroIntro(pageEl.value!)
-    buildWorkRowSkew(pageEl.value!)
+    applyVelocitySkew(pageEl.value!, '.section-heading, .workflow-card, .pricing-card, .faq-item, .video-frame, .work-row')
   }, pageEl.value)
 })
 

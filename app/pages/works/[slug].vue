@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { gsap } from 'gsap'
 import { SITE_URL } from '#shared/utils/site'
 import { findWorkBySlug, workItems } from '#shared/utils/works'
 
@@ -30,6 +31,18 @@ usePageSeo({
 })
 
 const localizedWorkUrl = () => localizedUrl(`/works/${work.slug}`)
+
+const pageEl = ref<HTMLElement | null>(null)
+let pageCtx: gsap.Context | undefined
+
+onMounted(() => {
+  if (!pageEl.value) return
+  pageCtx = gsap.context(() => {
+    applyVelocitySkew(pageEl.value!, '.case-meta, .case-media, .case-section, .next-case')
+  }, pageEl.value)
+})
+
+onUnmounted(() => pageCtx?.revert())
 
 useHead(() => ({
   script: [
@@ -83,6 +96,7 @@ useHead(() => ({
 
 <template>
   <main
+    ref="pageEl"
     class="case-page"
     :style="{ '--work-accent': work.accent }"
   >
