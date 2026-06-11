@@ -17,6 +17,10 @@ const currentIndex = workItems.findIndex(item => item.slug === work.slug)
 const nextWork = workItems[(currentIndex + 1) % workItems.length]
 const sections = ['context', 'approach', 'result'] as const
 
+definePageMeta({
+  scrollToTop: scrollToTopUnlessLocaleSwitch,
+})
+
 usePageSeo({
   title: () => t(`works.items.${work.slug}.title`),
   description: () => t(`works.items.${work.slug}.description`),
@@ -88,7 +92,7 @@ useHead(() => ({
     </NuxtLink>
 
     <article class="case-article">
-      <header class="case-hero">
+      <header v-reveal class="case-hero">
         <div class="case-hero-main">
           <p class="case-kicker">{{ work.year }} / {{ t(`works.types.${work.type}`) }}</p>
           <h1>
@@ -113,7 +117,7 @@ useHead(() => ({
         </dl>
       </header>
 
-      <figure class="case-media">
+      <figure v-reveal="100" class="case-media">
         <NuxtImg
           v-if="work.image"
           :src="work.image"
@@ -147,6 +151,7 @@ useHead(() => ({
             v-for="(key, index) in sections"
             :id="key"
             :key="key"
+            v-reveal
             class="case-section"
           >
             <span>{{ String(index + 1).padStart(2, '0') }}</span>
@@ -158,6 +163,7 @@ useHead(() => ({
 
       <NuxtLink
         v-if="nextWork"
+        v-reveal
         class="next-case"
         :to="localePath(`/works/${nextWork.slug}`)"
         :style="{ '--work-accent': nextWork.accent }"

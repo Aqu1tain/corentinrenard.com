@@ -6,6 +6,10 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const localizedUrl = useLocalizedUrl()
 
+definePageMeta({
+  scrollToTop: scrollToTopUnlessLocaleSwitch,
+})
+
 usePageSeo({
   title: () => t('seo.title'),
   description: () => t('seo.description'),
@@ -138,7 +142,7 @@ useHead(() => ({
   <div>
     <main class="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
       <section class="hero-shell mb-28">
-        <div class="hero-copy">
+        <div v-reveal class="hero-copy">
           <p class="section-kicker">{{ t('hero.kicker') }}</p>
           <h1 class="hero-title">{{ t('name') }}</h1>
           <p class="hero-role">{{ t('role') }}</p>
@@ -160,7 +164,7 @@ useHead(() => ({
           </div>
         </div>
 
-        <aside class="identity-panel" :aria-label="t('name')">
+        <aside v-reveal="120" class="identity-panel" :aria-label="t('name')">
           <div class="portrait-wrap">
             <NuxtImg
               src="/apple-touch-icon.png"
@@ -210,14 +214,15 @@ useHead(() => ({
       </section>
 
       <section id="process" class="section-block scroll-mt-28">
-        <div class="section-heading">
+        <div v-reveal class="section-heading">
           <p class="section-kicker">01</p>
           <h2>{{ t('workflow.title') }}</h2>
         </div>
         <div class="workflow-grid">
           <div
-            v-for="step in workflowSteps"
+            v-for="(step, i) in workflowSteps"
             :key="step.key"
+            v-reveal="i * 90"
             class="workflow-card"
           >
             <div class="card-topline">
@@ -230,15 +235,16 @@ useHead(() => ({
       </section>
 
       <section class="section-block compact-block">
-        <div class="section-heading">
+        <div v-reveal class="section-heading">
           <p class="section-kicker">02</p>
           <h2>{{ t('pricing.title') }}</h2>
           <span>{{ t('pricing.subtitle') }}</span>
         </div>
         <div class="pricing-grid">
           <div
-            v-for="type in pricingTypes"
+            v-for="(type, i) in pricingTypes"
             :key="type"
+            v-reveal="i * 90"
             class="pricing-card"
           >
             <p>{{ t(`pricing.types.${type}.title`) }}</p>
@@ -249,14 +255,15 @@ useHead(() => ({
       </section>
 
       <section class="section-block">
-        <div class="section-heading">
+        <div v-reveal class="section-heading">
           <p class="section-kicker">03</p>
           <h2>{{ t('faq.title') }}</h2>
         </div>
         <div class="faq-list">
           <details
-            v-for="item in faqItems"
+            v-for="(item, i) in faqItems"
             :key="item"
+            v-reveal="i * 60"
             class="faq-item"
           >
             <summary>
@@ -269,11 +276,11 @@ useHead(() => ({
       </section>
 
       <section class="section-block">
-        <div class="section-heading">
+        <div v-reveal class="section-heading">
           <p class="section-kicker">04</p>
           <h2>{{ t('interview.title') }}</h2>
         </div>
-        <div class="video-frame">
+        <div v-reveal="80" class="video-frame">
           <iframe
             v-if="showVideo"
             src="https://www.youtube.com/embed/DkTTzXJa1So?autoplay=1"
@@ -292,7 +299,7 @@ useHead(() => ({
       </section>
 
       <section id="works" class="section-block scroll-mt-28">
-        <div class="section-heading works-heading">
+        <div v-reveal class="section-heading works-heading">
           <div>
             <p class="section-kicker">05</p>
             <h2>{{ t('works.title') }}</h2>
@@ -302,8 +309,9 @@ useHead(() => ({
 
         <div class="works-list">
           <NuxtLink
-            v-for="work in workItems"
+            v-for="(work, i) in workItems"
             :key="work.slug"
+            v-reveal="i * 100"
             :to="localePath(`/works/${work.slug}`)"
             class="work-row"
             :style="{
@@ -633,6 +641,18 @@ useHead(() => ({
 
 .faq-item summary::-webkit-details-marker {
   display: none;
+}
+
+.faq-item::details-content {
+  opacity: 0;
+  block-size: 0;
+  overflow: clip;
+  transition: block-size 0.3s ease, opacity 0.3s ease, content-visibility 0.3s allow-discrete;
+}
+
+.faq-item[open]::details-content {
+  opacity: 1;
+  block-size: auto;
 }
 
 .faq-icon {
@@ -1047,6 +1067,10 @@ useHead(() => ({
   .social-btn:hover,
   .work-row:hover .work-arrow {
     transform: none;
+  }
+
+  .faq-item::details-content {
+    transition: none;
   }
 
   .work-row:hover .work-title-track {
