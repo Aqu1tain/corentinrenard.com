@@ -74,19 +74,19 @@
     "items": {
       "availability": {
         "question": "Es-tu disponible pour de nouveaux projets ?",
-        "answer": "Oui, Corentin Renard est disponible pour de nouveaux projets freelance, avec une préférence pour les missions web bien cadrées et les collaborations où design, développement et maintenance comptent vraiment."
+        "answer": "Oui, je suis disponible pour de nouveaux projets freelance, avec une préférence pour les missions web bien cadrées où design, développement et maintenance comptent vraiment."
       },
       "location": {
         "question": "Où es-tu basé ?",
-        "answer": "Corentin Renard est un designer web full stack basé en France et peut travailler à distance avec des clients francophones ou anglophones."
+        "answer": "Je suis basé en France et je travaille à distance avec des clients francophones comme anglophones."
       },
       "stack": {
         "question": "Quelles technologies utilises-tu ?",
-        "answer": "Les projets sont généralement conçus sur Figma puis développés avec Nuxt, Vue, Tailwind CSS et des solutions adaptées au besoin du site ou du CMS."
+        "answer": "Je conçois les interfaces sur Figma, puis je développe avec Nuxt, Vue, Tailwind CSS et les solutions adaptées au besoin du site ou du CMS."
       },
       "pricing": {
         "question": "Combien coûte un site web ?",
-        "answer": "Une landing page commence à partir de 900 €, un site vitrine à partir de 2 500 €, un site e-commerce à partir de 4 500 €, et les projets sur mesure sont estimés sur devis."
+        "answer": "Une landing page commence à partir de 900 €, un site vitrine à partir de 2 500 €, un site e-commerce à partir de 4 500 €, et j'estime les projets sur mesure sur devis."
       }
     }
   },

@@ -74,19 +74,19 @@
     "items": {
       "availability": {
         "question": "Are you available for new projects?",
-        "answer": "Yes, Corentin Renard is available for new freelance projects, especially scoped web missions where design, development and maintenance all matter."
+        "answer": "Yes, I am available for new freelance projects, especially well-scoped web missions where design, development and maintenance all matter."
       },
       "location": {
         "question": "Where are you based?",
-        "answer": "Corentin Renard is a full stack web designer based in France and works remotely with French-speaking and English-speaking clients."
+        "answer": "I am based in France and I work remotely with both French-speaking and English-speaking clients."
       },
       "stack": {
         "question": "Which technologies do you use?",
-        "answer": "Projects are usually designed in Figma and built with Nuxt, Vue, Tailwind CSS and the technical choices that fit the website or CMS requirement."
+        "answer": "I design interfaces in Figma, then build them with Nuxt, Vue, Tailwind CSS and whatever fits the website or CMS requirement."
       },
       "pricing": {
         "question": "How much does a website cost?",
-        "answer": "A landing page starts from €900, a showcase website starts from €2,500, an e-commerce website starts from €4,500, and custom projects are quoted after scoping."
+        "answer": "A landing page starts from €900, a showcase website from €2,500, an e-commerce website from €4,500, and I quote custom projects after scoping."
       }
     }
   },
