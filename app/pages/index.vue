@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { gsap } from 'gsap'
+import { SplitText } from 'gsap/SplitText'
 import { SITE_URL } from '#shared/utils/site'
 import { workItems } from '#shared/utils/works'
 
@@ -64,6 +66,35 @@ const offerPrices = {
   showcase: 2500,
   ecommerce: 4500,
 } as const
+
+const heroEl = ref<HTMLElement | null>(null)
+const localeSwitching = useState('locale-switching', () => false)
+let heroCtx: gsap.Context | undefined
+
+onMounted(async () => {
+  if (localeSwitching.value) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  gsap.registerPlugin(SplitText)
+  await document.fonts.ready
+  if (!heroEl.value) return
+
+  heroCtx = gsap.context(() => {
+    const title = heroEl.value?.querySelector<HTMLElement>('.hero-title')
+    if (!title) return
+    const baseColor = getComputedStyle(title).color
+    const accents = workItems.map((work) => work.accent)
+    const split = SplitText.create(title, { type: 'chars', mask: 'chars' })
+    split.chars.forEach((char, i) => gsap.set(char, { color: accents[i % accents.length] }))
+
+    gsap.timeline({ onComplete: () => split.revert() })
+      .from('.section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
+      .from(split.chars, { yPercent: 120, duration: 0.8, ease: 'power3.out', stagger: 0.035 }, 0.08)
+      .to(split.chars, { color: baseColor, duration: 0.6, ease: 'power1.inOut', stagger: 0.03 }, '-=0.5')
+      .from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 }, 0.45)
+  }, heroEl.value)
+})
+
+onUnmounted(() => heroCtx?.revert())
 
 useHead(() => ({
   script: [
@@ -142,7 +173,7 @@ useHead(() => ({
   <div>
     <main class="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
       <section class="hero-shell mb-28">
-        <div v-reveal class="hero-copy">
+        <div ref="heroEl" class="hero-copy">
           <p class="section-kicker">{{ t('hero.kicker') }}</p>
           <h1 class="hero-title">{{ t('name') }}</h1>
           <p class="hero-role">{{ t('role') }}</p>
