@@ -242,9 +242,8 @@ useHead(() => ({
             class="pricing-card"
           >
             <p>{{ t(`pricing.types.${type}.title`) }}</p>
-            <strong>
-              {{ t(`pricing.types.${type}.sentence`) }}
-            </strong>
+            <span v-if="type !== 'custom'" class="pricing-from">{{ t('pricing.from') }}</span>
+            <strong>{{ t(`pricing.types.${type}.price`) }}</strong>
           </div>
         </div>
       </section>
@@ -588,19 +587,33 @@ useHead(() => ({
 }
 
 .pricing-card {
+  display: flex;
+  flex-direction: column;
   padding: 1.25rem;
 }
 
 .pricing-card p {
-  margin-bottom: 1rem;
+  margin-bottom: auto;
+  padding-bottom: 2.25rem;
   color: var(--color-neutral-500);
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pricing-from {
+  color: var(--color-neutral-500);
+  font-size: 0.9rem;
 }
 
 .pricing-card strong {
   display: block;
-  font-size: 1.55rem;
-  line-height: 1.2;
+  margin-top: 0.2rem;
+  font-family: var(--font-display), serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .faq-list {
@@ -820,6 +833,7 @@ useHead(() => ({
 :where(.dark) .section-heading span,
 :where(.dark) .works-heading > p,
 :where(.dark) .pricing-card p,
+:where(.dark) .pricing-from,
 :where(.dark) .work-row-top,
 :where(.dark) .work-tags span,
 :where(.dark) .footer {

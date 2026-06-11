@@ -14,7 +14,7 @@
     "toggle": "Changer de langue"
   },
   "social": {
-    "copied": "Copié !"
+    "copied": "Copié !"
   },
   "name": "Corentin Renard",
   "role": "Designer Web Full Stack",
@@ -48,40 +48,45 @@
     "types": {
       "landing": {
         "title": "Landing Page",
-        "sentence": "Landing page à partir de 900 €"
+        "sentence": "Landing page à partir de 900 €",
+        "price": "900 €"
       },
       "showcase": {
         "title": "Site Vitrine",
-        "sentence": "Site vitrine à partir de 2 500 €"
+        "sentence": "Site vitrine à partir de 2 500 €",
+        "price": "2 500 €"
       },
       "ecommerce": {
         "title": "E-commerce",
-        "sentence": "Site e-commerce à partir de 4 500 €"
+        "sentence": "Site e-commerce à partir de 4 500 €",
+        "price": "4 500 €"
       },
       "custom": {
         "title": "Projet Sur Mesure",
-        "sentence": "Projet sur mesure sur devis"
+        "sentence": "Projet sur mesure sur devis",
+        "price": "Sur devis"
       }
-    }
+    },
+    "from": "À partir de"
   },
   "faq": {
     "title": "Questions fréquentes",
     "items": {
       "availability": {
-        "question": "Es-tu disponible pour de nouveaux projets ?",
+        "question": "Es-tu disponible pour de nouveaux projets ?",
         "answer": "Oui, Corentin Renard est disponible pour de nouveaux projets freelance, avec une préférence pour les missions web bien cadrées et les collaborations où design, développement et maintenance comptent vraiment."
       },
       "location": {
-        "question": "Où es-tu basé ?",
+        "question": "Où es-tu basé ?",
         "answer": "Corentin Renard est un designer web full stack basé en France et peut travailler à distance avec des clients francophones ou anglophones."
       },
       "stack": {
-        "question": "Quelles technologies utilises-tu ?",
+        "question": "Quelles technologies utilises-tu ?",
         "answer": "Les projets sont généralement conçus sur Figma puis développés avec Nuxt, Vue, Tailwind CSS et des solutions adaptées au besoin du site ou du CMS."
       },
       "pricing": {
-        "question": "Combien coûte un site web ?",
-        "answer": "Une landing page commence à partir de 900 €, un site vitrine à partir de 2 500 €, un site e-commerce à partir de 4 500 €, et les projets sur mesure sont estimés sur devis."
+        "question": "Combien coûte un site web ?",
+        "answer": "Une landing page commence à partir de 900 €, un site vitrine à partir de 2 500 €, un site e-commerce à partir de 4 500 €, et les projets sur mesure sont estimés sur devis."
       }
     }
   },
