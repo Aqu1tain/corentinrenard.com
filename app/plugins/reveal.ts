@@ -11,7 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       entry.target.classList.add('revealed')
       observer.unobserve(entry.target)
     }
-  }, { rootMargin: '0px 0px -10% 0px' })
+  }, { rootMargin: '0px 0px -18% 0px' })
 
   nuxtApp.vueApp.directive('reveal', {
     mounted(el: HTMLElement, binding) {
