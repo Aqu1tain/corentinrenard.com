@@ -15,6 +15,15 @@
   }
 }
 
+html {
+  background-color: white;
+  transition: background-color 0.15s linear;
+}
+
+html.dark {
+  background-color: var(--color-neutral-900);
+}
+
 body {
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
