@@ -107,7 +107,8 @@
       "year": "Year",
       "type": "Type",
       "scope": "Scope",
-      "next": "Next project"
+      "next": "Next project",
+      "visit": "Visit the live site"
     }
   },
   "theme": {

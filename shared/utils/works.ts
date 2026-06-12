@@ -4,6 +4,7 @@ export interface WorkItem {
   slug: string
   type: WorkType
   image?: string
+  url?: string
   accent: string
   year: string
   stack: string[]
@@ -15,6 +16,7 @@ export const workItems: WorkItem[] = [
     slug: 'les-chemins-du-pain',
     type: 'mission',
     image: '/works/les-chemins-du-pain.jpg',
+    url: 'https://lescheminsdupain.com',
     accent: '#8a5a23',
     year: '2025',
     stack: ['UI/UX', 'Nuxt', 'Leaflet'],
@@ -24,6 +26,7 @@ export const workItems: WorkItem[] = [
     slug: 'afc-des-landes',
     type: 'mission',
     image: '/works/afc-des-landes.jpg',
+    url: 'https://afc40landes.fr',
     accent: '#e3005d',
     year: '2024',
     stack: ['UI/UX', 'PHP'],

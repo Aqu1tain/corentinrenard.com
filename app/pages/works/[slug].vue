@@ -147,19 +147,28 @@ useHead(() => ({
       </header>
 
       <figure v-reveal="100" class="case-media">
-        <NuxtImg
-          v-if="work.image"
-          :src="work.image"
-          width="1200"
-          height="720"
-          fit="cover"
-          :alt="doc?.title ?? ''"
-          data-speed="clamp(0.95)"
-        />
-        <div v-else class="case-media-placeholder">
-          <span class="placeholder-tag">{{ t(`works.types.${work.type}`) }}</span>
-          <Icon name="mdi:arrow-top-right" size="34" />
-        </div>
+        <component
+          :is="work.url ? 'a' : 'div'"
+          :href="work.url"
+          :target="work.url ? '_blank' : undefined"
+          :rel="work.url ? 'noopener noreferrer' : undefined"
+          :aria-label="work.url ? t('works.detail.visit') : undefined"
+          class="case-media-inner"
+        >
+          <NuxtImg
+            v-if="work.image"
+            :src="work.image"
+            width="1200"
+            height="720"
+            fit="cover"
+            :alt="doc?.title ?? ''"
+            data-speed="clamp(0.97)"
+          />
+          <div v-else class="case-media-placeholder">
+            <span class="placeholder-tag">{{ t(`works.types.${work.type}`) }}</span>
+            <Icon name="mdi:arrow-top-right" size="34" />
+          </div>
+        </component>
       </figure>
 
       <div class="case-content">
@@ -301,6 +310,12 @@ useHead(() => ({
   background: var(--color-neutral-50);
 }
 
+.case-media-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .case-media img,
 .case-media-placeholder {
   width: 100%;
@@ -309,7 +324,7 @@ useHead(() => ({
 
 .case-media img {
   object-fit: cover;
-  scale: 1.1;
+  scale: 1.05;
 }
 
 .case-media-placeholder {
