@@ -21,12 +21,13 @@ export const workItems: WorkItem[] = [
     published: true,
   },
   {
-    slug: 'client-mission',
+    slug: 'afc-des-landes',
     type: 'mission',
-    accent: '#18a058',
-    year: '2026',
-    stack: ['Figma', 'Integration', 'Support'],
-    published: false,
+    image: '/works/afc-des-landes.jpg',
+    accent: '#e3005d',
+    year: '2024',
+    stack: ['UI/UX', 'PHP'],
+    published: true,
   },
   {
     slug: 'personal-project',
