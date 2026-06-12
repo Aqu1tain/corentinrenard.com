@@ -26,7 +26,14 @@
   },
   "devDependencies": {
     "@iconify-json/mdi": "^1.2.3",
+    "@types/node": "^25.9.3",
+    "better-sqlite3": "^12.10.0",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.4"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
   }
 }
