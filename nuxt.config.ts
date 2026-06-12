@@ -25,6 +25,12 @@ export default defineNuxtConfig({
 
   content: {
     experimental: { nativeSqlite: process.env.NODE_ENV === 'production' },
+    database: {
+      type: 'sqlite',
+      filename: process.env.NODE_ENV === 'production'
+        ? './.data/content/build.sqlite'
+        : './.data/content/dev.sqlite',
+    },
   },
 
   colorMode: {
