@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SITE_URL } from '#shared/utils/site'
 import { findWorkBySlug, workItems } from '#shared/utils/works'
 
@@ -52,8 +53,24 @@ let pageCtx: gsap.Context | undefined
 
 onMounted(() => {
   if (!pageEl.value) return
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   pageCtx = gsap.context(() => {
     applyVelocitySkew(pageEl.value!, '.case-meta, .case-media, .case-prose, .next-case')
+
+    if (reduceMotion) return
+    gsap.matchMedia().add('(min-width: 860px)', () => {
+      const rail = pageEl.value?.querySelector<HTMLElement>('.case-rail')
+      const content = pageEl.value?.querySelector<HTMLElement>('.case-content')
+      if (!rail || !content) return
+      ScrollTrigger.create({
+        trigger: rail,
+        start: 'top 104px',
+        endTrigger: content,
+        end: () => `bottom ${rail.offsetHeight + 104}px`,
+        pin: rail,
+        pinSpacing: false,
+      })
+    })
   }, pageEl.value)
 })
 
@@ -507,13 +524,15 @@ useHead(() => ({
     align-items: start;
   }
 
+  .case-rail nav {
+    display: grid;
+  }
+}
+
+@media (min-width: 860px) and (prefers-reduced-motion: reduce) {
   .case-rail {
     position: sticky;
     top: 6.5rem;
-  }
-
-  .case-rail nav {
-    display: grid;
   }
 }
 
