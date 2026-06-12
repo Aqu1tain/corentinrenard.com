@@ -20,22 +20,35 @@ export default defineNuxtPlugin((nuxtApp) => {
     localeSwitching.value = isLocaleSwitch(to, from)
   })
 
+  const appLoaded = useState('app-loaded', () => false)
+  let pendingReveals: Array<() => void> = []
+  watch(appLoaded, (loaded) => {
+    if (!loaded) return
+    pendingReveals.forEach((arm) => arm())
+    pendingReveals = []
+  })
+
   nuxtApp.vueApp.directive<HTMLElement, number | undefined>('reveal', {
     mounted(el, binding) {
       if (reduceMotion || localeSwitching.value) return
       gsap.set(el, { autoAlpha: 0, y: 20 })
-      tweens.set(el, gsap.to(el, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.55,
-        delay: (binding.value ?? 0) / 1000,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'clamp(top 82%)',
-          once: true,
-        },
-      }))
+      const arm = () => {
+        if (!el.isConnected) return
+        tweens.set(el, gsap.to(el, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.55,
+          delay: (binding.value ?? 0) / 1000,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'clamp(top 82%)',
+            once: true,
+          },
+        }))
+      }
+      if (appLoaded.value) arm()
+      else pendingReveals.push(arm)
     },
     unmounted(el) {
       const tween = tweens.get(el)

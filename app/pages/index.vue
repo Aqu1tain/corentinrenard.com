@@ -151,6 +151,7 @@ const buildHeroIntro = (scope: HTMLElement) => {
 
   const tl = gsap.timeline({ onComplete: () => split.revert() })
   tl.from('.hero-copy .section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
+  tl.from('.identity-panel', { autoAlpha: 0, y: 24, duration: 0.7, ease: 'power2.out' }, 0.2)
   split.chars.forEach((char, i) => {
     const at = 0.08 + i * 0.05
     tl.from(char, { yPercent: 120, duration: 0.5, ease: 'power3.out' }, at)
@@ -161,6 +162,16 @@ const buildHeroIntro = (scope: HTMLElement) => {
 
 watch(workDocs, () => nextTick(computeMarqueeCounts))
 
+const appLoaded = useState('app-loaded', () => false)
+const whenAppLoaded = () => new Promise<void>((resolve) => {
+  if (appLoaded.value) return resolve()
+  const stop = watch(appLoaded, (loaded) => {
+    if (!loaded) return
+    stop()
+    resolve()
+  })
+})
+
 onMounted(async () => {
   await document.fonts.ready
   computeMarqueeCounts()
@@ -168,6 +179,7 @@ onMounted(async () => {
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   gsap.registerPlugin(ScrollTrigger, SplitText)
+  await whenAppLoaded()
   if (!pageEl.value) return
 
   pageCtx = gsap.context(() => {
@@ -281,7 +293,7 @@ useHead(() => ({
           </div>
         </div>
 
-        <aside v-reveal="120" class="identity-panel" :aria-label="t('name')">
+        <aside class="identity-panel" :aria-label="t('name')">
           <div class="portrait-wrap">
             <NuxtImg
               src="/apple-touch-icon.png"

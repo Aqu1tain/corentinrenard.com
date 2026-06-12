@@ -71,6 +71,7 @@ onUnmounted(() => {
 
 <template>
   <div class="min-h-screen bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100 font-sans transition-colors">
+    <AppLoader />
     <header class="site-header">
       <NuxtLink :to="localePath('/')" class="brand-mark" aria-label="Corentin Renard">
         <img src="/apple-touch-icon.png" alt="" />
