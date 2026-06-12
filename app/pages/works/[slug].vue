@@ -162,7 +162,6 @@ useHead(() => ({
             height="720"
             fit="cover"
             :alt="doc?.title ?? ''"
-            data-speed="clamp(0.97)"
           />
           <div v-else class="case-media-placeholder">
             <span class="placeholder-tag">{{ t(`works.types.${work.type}`) }}</span>
@@ -324,7 +323,6 @@ useHead(() => ({
 
 .case-media img {
   object-fit: cover;
-  scale: 1.05;
 }
 
 .case-media-placeholder {

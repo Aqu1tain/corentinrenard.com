@@ -405,7 +405,7 @@ useHead(() => ({
             class="h-full w-full"
           />
           <button v-else class="video-facade" @click="showVideo = true">
-            <img src="/interview-thumbnail.png" alt="Interview thumbnail" class="h-full w-full object-cover" data-speed="0.97" />
+            <img src="/interview-thumbnail.png" alt="Interview thumbnail" class="h-full w-full object-cover" />
             <span class="video-play-btn">
               <Icon name="mdi:youtube" size="58" />
             </span>
@@ -812,10 +812,6 @@ useHead(() => ({
   cursor: pointer;
   border: none;
   padding: 0;
-}
-
-.video-facade img {
-  scale: 1.08;
 }
 
 .video-play-btn {
