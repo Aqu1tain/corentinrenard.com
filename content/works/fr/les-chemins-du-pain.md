@@ -10,7 +10,7 @@ Les Chemins du Pain est une boulangerie artisanale et bio installée à Cauneill
 
 ## Approche
 
-Le site est construit avec Nuxt autour de trois récits : la philosophie de la maison, le levain (son « trésor vivant ») et les points de vente. Le design reprend les couleurs du fournil, avec les photos des fours et des pains en pleine page. Côté pratique, une carte interactive Leaflet présente chaque boutique avec ses horaires et son caractère, complétée par un formulaire de contact et un volet recrutement.
+J'ai construit le site avec Nuxt autour de trois récits : la philosophie de la maison, le levain (son « trésor vivant ») et les points de vente. Le design reprend les couleurs du fournil, avec les photos des fours et des pains en pleine page. Côté pratique, une carte interactive Leaflet présente chaque boutique avec ses horaires et son caractère, complétée par un formulaire de contact et un volet recrutement.
 
 ## Résultat
 

@@ -1,5 +1,5 @@
 ---
-title: "Draner"
+title: "Draner.com"
 description: "WordPress showcase site for Draner, a French digital services company: website creation, copywriting, SMS and artificial intelligence brought together on dedicated pages."
 preview: "The showcase site of a French web SMS pioneer."
 ---
@@ -10,7 +10,7 @@ Draner is a French digital services company based in Habas, founded in 2001 and 
 
 ## Approach
 
-The site is built on WordPress with the Avada theme and its page builder, customised through a child theme. Each service gets a dedicated page: website creation with integration of CMS such as Drupal, WordPress, Prestashop and Magento, copywriting from consulting to SEO optimisation, an SMS service compliant with the French CNIL and ARCEP regulators, and AI expertise up to custom chatbots. Around them, an About page with FAQ, key figures and testimonials, a portfolio of six client projects and a contact form complete the journey.
+I built the site on WordPress with the Avada theme and its page builder, customised through a child theme. Each service gets a dedicated page: website creation with integration of CMS such as Drupal, WordPress, Prestashop and Magento, copywriting from consulting to SEO optimisation, an SMS service compliant with the French CNIL and ARCEP regulators, and AI expertise up to custom chatbots. Around them, an About page with FAQ, key figures and testimonials, a portfolio of six client projects and a contact form complete the journey.
 
 ## Result
 

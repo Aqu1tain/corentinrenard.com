@@ -10,7 +10,7 @@ La Fédération des AFC des Landes réunit deux associations familiales catholiq
 
 ## Approche
 
-Le site, développé en PHP, tient en trois pages : un accueil qui pose l'identité de la fédération, une page d'actualités et une page de contact. L'accueil enchaîne une section « Qui sommes nous ? » et un bouton « Adhérer » qui mène à l'espace adhérent national des AFC. Les actualités annoncent les rendez-vous à venir, et le contact passe par un formulaire volontairement simple : nom, email, message.
+J'ai développé le site en PHP, en trois pages : un accueil qui pose l'identité de la fédération, une page d'actualités et une page de contact. L'accueil enchaîne une section « Qui sommes nous ? » et un bouton « Adhérer » qui mène à l'espace adhérent national des AFC. Les actualités annoncent les rendez-vous à venir, et le contact passe par un formulaire volontairement simple : nom, email, message.
 
 ## Résultat
 

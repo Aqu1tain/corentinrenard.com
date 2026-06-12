@@ -10,7 +10,7 @@ Les Chemins du Pain is an organic artisan bakery based in Cauneille, in the Land
 
 ## Approach
 
-The site is built with Nuxt around three narratives: the house philosophy, the sourdough starter (its "living treasure") and the points of sale. The design borrows the bakehouse colours, with full-width photos of ovens and loaves. On the practical side, an interactive Leaflet map presents each shop with its opening hours and personality, completed by a contact form and a recruitment section.
+I built the site with Nuxt around three narratives: the house philosophy, the sourdough starter (its "living treasure") and the points of sale. The design borrows the bakehouse colours, with full-width photos of ovens and loaves. On the practical side, an interactive Leaflet map presents each shop with its opening hours and personality, completed by a contact form and a recruitment section.
 
 ## Result
 

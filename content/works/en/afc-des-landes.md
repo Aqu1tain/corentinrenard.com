@@ -10,7 +10,7 @@ The Fédération des AFC des Landes brings together two Catholic family associat
 
 ## Approach
 
-The site, built with PHP, fits in three pages: a homepage that sets the federation's identity, a news page and a contact page. The homepage moves from a "Qui sommes nous ?" section to an "Adhérer" button leading to the national AFC member portal. The news page announces upcoming gatherings, and contact goes through a deliberately simple form: name, email, message.
+I built the site in PHP, in three pages: a homepage that sets the federation's identity, a news page and a contact page. The homepage moves from a "Qui sommes nous ?" section to an "Adhérer" button leading to the national AFC member portal. The news page announces upcoming gatherings, and contact goes through a deliberately simple form: name, email, message.
 
 ## Result
 
