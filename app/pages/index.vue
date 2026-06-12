@@ -85,6 +85,34 @@ const pageEl = ref<HTMLElement | null>(null)
 const localeSwitching = useState('locale-switching', () => false)
 let pageCtx: gsap.Context | undefined
 
+const MARQUEE_SPEED = 140
+
+const marqueeCounts = ref<Record<string, number>>({})
+const marqueeDurations = ref<Record<string, string>>({})
+let marqueeResizeTimer: ReturnType<typeof setTimeout> | undefined
+
+const computeMarqueeCounts = () => {
+  if (!pageEl.value) return
+  const counts: Record<string, number> = {}
+  const durations: Record<string, string> = {}
+  for (const row of pageEl.value.querySelectorAll<HTMLElement>('.work-row')) {
+    const slug = row.dataset.slug
+    const segment = row.querySelector<HTMLElement>('.work-title-segment')
+    if (!slug || !segment) continue
+    const segmentWidth = Math.max(segment.offsetWidth, 1)
+    const half = Math.max(1, Math.ceil(row.clientWidth / segmentWidth))
+    counts[slug] = half * 2
+    durations[slug] = `${Math.max(4, (half * segmentWidth) / MARQUEE_SPEED)}s`
+  }
+  marqueeCounts.value = counts
+  marqueeDurations.value = durations
+}
+
+const onMarqueeResize = () => {
+  clearTimeout(marqueeResizeTimer)
+  marqueeResizeTimer = setTimeout(computeMarqueeCounts, 150)
+}
+
 const buildHeroIntro = (scope: HTMLElement) => {
   const title = scope.querySelector<HTMLElement>('.hero-title')
   const textNode = title?.firstChild
@@ -128,10 +156,15 @@ const buildHeroIntro = (scope: HTMLElement) => {
   tl.from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 })
 }
 
+watch(workDocs, () => nextTick(computeMarqueeCounts))
+
 onMounted(async () => {
+  await document.fonts.ready
+  computeMarqueeCounts()
+  window.addEventListener('resize', onMarqueeResize)
+
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   gsap.registerPlugin(ScrollTrigger, SplitText)
-  await document.fonts.ready
   if (!pageEl.value) return
 
   pageCtx = gsap.context(() => {
@@ -140,7 +173,11 @@ onMounted(async () => {
   }, pageEl.value)
 })
 
-onUnmounted(() => pageCtx?.revert())
+onUnmounted(() => {
+  window.removeEventListener('resize', onMarqueeResize)
+  clearTimeout(marqueeResizeTimer)
+  pageCtx?.revert()
+})
 
 useHead(() => ({
   script: [
@@ -391,6 +428,7 @@ useHead(() => ({
             :key="work.slug"
             v-reveal="i * 100"
             :to="localePath(`/works/${work.slug}`)"
+            :data-slug="work.slug"
             class="work-row"
             :style="{
               '--work-accent': work.accent,
@@ -401,9 +439,16 @@ useHead(() => ({
               <Icon name="mdi:arrow-top-right" size="22" class="work-arrow" />
             </div>
             <h3 class="work-title">
-              <span class="work-title-track">
-                <span class="work-title-segment">{{ workMeta.get(work.slug)?.title }}</span>
-                <span class="work-title-segment" aria-hidden="true">{{ workMeta.get(work.slug)?.title }}</span>
+              <span
+                class="work-title-track"
+                :style="{ animationDuration: marqueeDurations[work.slug] ?? '8s' }"
+              >
+                <span
+                  v-for="n in marqueeCounts[work.slug] ?? 2"
+                  :key="n"
+                  class="work-title-segment"
+                  :aria-hidden="n > 1 ? 'true' : undefined"
+                >{{ workMeta.get(work.slug)?.title }}</span>
               </span>
             </h3>
             <div class="work-row-bottom">
