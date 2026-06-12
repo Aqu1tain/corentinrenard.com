@@ -462,6 +462,8 @@ useHead(() => ({
       </section>
     </main>
 
+    <WorksHoverPreview />
+
     <footer class="footer">
       <span>{{ currentYear }} Corentin Renard</span>
       <a href="mailto:contact@corentinrenard.com">contact@corentinrenard.com</a>
