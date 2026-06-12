@@ -6,7 +6,7 @@ preview: "Deux associations familiales des Landes réunies sur un même site."
 
 ## Contexte
 
-La Fédération des AFC des Landes réunit deux associations familiales catholiques : AFC Adour Océan à Dax et AFC Landes de Gascogne à Mont-de-Marsan. Leur mission, unir amour familial et foi chrétienne, se vit au quotidien dans des ciné-débats au cinéma de Mont-de-Marsan, des récitals ou une galette des Rois. Cette vie associative méritait une adresse en ligne pour se présenter et annoncer ses rendez-vous.
+La Fédération des AFC des Landes réunit deux associations familiales catholiques : AFC Adour Océan à Dax et AFC Landes de Gascogne à Mont-de-Marsan. Leur mission, unir amour familial et foi chrétienne, se vit au quotidien dans des ciné-débats ou des récitals, et dans des actions concrètes. Cette vie associative méritait une adresse en ligne pour se présenter et annoncer ses rendez-vous.
 
 ## Approche
 

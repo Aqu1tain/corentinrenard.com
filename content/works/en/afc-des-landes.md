@@ -6,7 +6,7 @@ preview: "Two family associations in the Landes, united on one site."
 
 ## Context
 
-The Fédération des AFC des Landes brings together two Catholic family associations: AFC Adour Océan in Dax and AFC Landes de Gascogne in Mont-de-Marsan. Their mission, uniting family love and Christian faith, lives day to day through film debates at the Mont-de-Marsan cinema, recitals and a galette des Rois gathering. That community life deserved an online home to introduce itself and announce its events.
+The Fédération des AFC des Landes brings together two Catholic family associations: AFC Adour Océan in Dax and AFC Landes de Gascogne in Mont-de-Marsan. Their mission, uniting family love and Christian faith, lives day to day through film debates, recitals and concrete actions. That community life deserved an online home to introduce itself and announce its events.
 
 ## Approach
 
