@@ -13,7 +13,7 @@ export interface WorkItem {
 export const workItems: WorkItem[] = [
   {
     slug: 'les-chemins-du-pain',
-    type: 'case-study',
+    type: 'mission',
     image: '/works/les-chemins-du-pain.jpg',
     accent: '#8a5a23',
     year: '2025',
