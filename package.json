@@ -9,7 +9,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "NODE_ENV=production nuxt typecheck"
   },
   "dependencies": {
     "@nuxt/content": "^3.14.0",
