@@ -32,7 +32,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         ease: 'power2.out',
         scrollTrigger: {
           trigger: el,
-          start: 'top 82%',
+          start: 'clamp(top 82%)',
           once: true,
         },
       }))
