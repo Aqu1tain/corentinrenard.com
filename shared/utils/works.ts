@@ -13,6 +13,16 @@ export interface WorkItem {
 
 export const workItems: WorkItem[] = [
   {
+    slug: 'stremio-horizon',
+    type: 'personal',
+    image: '/works/stremio-horizon.jpg',
+    url: 'https://stremio-horizon.akitain.fr',
+    accent: '#7b5bf5',
+    year: '2026',
+    stack: ['JavaScript', 'Rust', 'Tauri'],
+    published: true,
+  },
+  {
     slug: 'les-chemins-du-pain',
     type: 'mission',
     image: '/works/les-chemins-du-pain.jpg',
@@ -20,6 +30,15 @@ export const workItems: WorkItem[] = [
     accent: '#8a5a23',
     year: '2025',
     stack: ['UI/UX', 'Nuxt', 'Leaflet'],
+    published: true,
+  },
+  {
+    slug: 'sandjs',
+    type: 'personal',
+    url: 'https://github.com/Aqu1tain/sandjs',
+    accent: '#0b7285',
+    year: '2025',
+    stack: ['TypeScript', 'SVG', 'npm'],
     published: true,
   },
   {
@@ -50,25 +69,6 @@ export const workItems: WorkItem[] = [
     accent: '#3e6df0',
     year: '2023',
     stack: ['WordPress', 'Avada'],
-    published: true,
-  },
-  {
-    slug: 'stremio-horizon',
-    type: 'personal',
-    image: '/works/stremio-horizon.jpg',
-    url: 'https://stremio-horizon.akitain.fr',
-    accent: '#7b5bf5',
-    year: '2026',
-    stack: ['JavaScript', 'Rust', 'Tauri'],
-    published: true,
-  },
-  {
-    slug: 'sandjs',
-    type: 'personal',
-    url: 'https://github.com/Aqu1tain/sandjs',
-    accent: '#0b7285',
-    year: '2025',
-    stack: ['TypeScript', 'SVG', 'npm'],
     published: true,
   },
 ]
