@@ -23,6 +23,15 @@ export const workItems: WorkItem[] = [
     published: true,
   },
   {
+    slug: 'rosary-mysteries',
+    type: 'personal',
+    url: 'https://github.com/Aqu1tain/rosary-mysteries',
+    accent: '#1d4e8f',
+    year: '2026',
+    stack: ['Kotlin', 'Android'],
+    published: true,
+  },
+  {
     slug: 'les-chemins-du-pain',
     type: 'mission',
     image: '/works/les-chemins-du-pain.jpg',
