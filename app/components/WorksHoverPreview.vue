@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { gsap } from 'gsap'
+import type { WorkItem } from '#shared/utils/works'
 import { workItems } from '#shared/utils/works'
+
+const props = defineProps<{ titles?: Record<string, string> }>()
 
 const VERT = `
 attribute vec2 aPosition;
@@ -46,8 +49,58 @@ void main() {
 
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 const enabled = ref(false)
+const { t } = useI18n()
 
-const imageBySlug = new Map(workItems.filter((work) => work.image).map((work) => [work.slug, work.image!]))
+const workBySlug = new Map(workItems.map((work) => [work.slug, work]))
+
+const drawFallbackCard = (work: WorkItem) => {
+  const card = document.createElement('canvas')
+  card.width = 1280
+  card.height = 720
+  const ctx = card.getContext('2d')!
+
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 0, card.width, card.height)
+  ctx.globalAlpha = 0.1
+  ctx.fillStyle = work.accent
+  ctx.fillRect(0, 0, card.width, card.height)
+
+  ctx.globalAlpha = 0.14
+  ctx.strokeStyle = work.accent
+  ctx.lineWidth = 1
+  for (let x = 0; x <= card.width; x += 48) {
+    ctx.beginPath()
+    ctx.moveTo(x, 0)
+    ctx.lineTo(x, card.height)
+    ctx.stroke()
+  }
+  for (let y = 0; y <= card.height; y += 48) {
+    ctx.beginPath()
+    ctx.moveTo(0, y)
+    ctx.lineTo(card.width, y)
+    ctx.stroke()
+  }
+
+  ctx.globalAlpha = 1
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+
+  ctx.fillStyle = work.accent
+  ctx.font = '700 26px Inter, sans-serif'
+  ctx.fillText(`${work.year} / ${t(`works.types.${work.type}`).toUpperCase()}`, card.width / 2, 240)
+
+  const title = props.titles?.[work.slug] ?? work.slug
+  let size = 120
+  ctx.font = `400 ${size}px "DM Serif Display", serif`
+  while (size > 48 && ctx.measureText(title).width > card.width - 160) {
+    size -= 8
+    ctx.font = `400 ${size}px "DM Serif Display", serif`
+  }
+  ctx.fillStyle = '#171717'
+  ctx.fillText(title, card.width / 2, card.height / 2 + 24)
+
+  return card
+}
 
 let gl: WebGLRenderingContext | null = null
 let cleanups: Array<() => void> = []
@@ -102,21 +155,29 @@ const initWebgl = () => {
   const textures = new Map<string, WebGLTexture>()
   let currentSlug: string | null = null
 
+  const uploadTexture = (slug: string, source: TexImageSource) => {
+    const texture = context.createTexture()!
+    context.bindTexture(context.TEXTURE_2D, texture)
+    context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE)
+    context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE)
+    context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR)
+    context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.LINEAR)
+    context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, context.RGBA, context.UNSIGNED_BYTE, source)
+    textures.set(slug, texture)
+    if (currentSlug === slug) context.bindTexture(context.TEXTURE_2D, texture)
+  }
+
   const loadTexture = (slug: string) => {
     if (textures.has(slug)) return
+    const work = workBySlug.get(slug)
+    if (!work) return
+    if (!work.image) {
+      uploadTexture(slug, drawFallbackCard(work))
+      return
+    }
     const img = new Image()
-    img.src = imageBySlug.get(slug)!
-    img.decode().then(() => {
-      const texture = context.createTexture()!
-      context.bindTexture(context.TEXTURE_2D, texture)
-      context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_S, context.CLAMP_TO_EDGE)
-      context.texParameteri(context.TEXTURE_2D, context.TEXTURE_WRAP_T, context.CLAMP_TO_EDGE)
-      context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.LINEAR)
-      context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.LINEAR)
-      context.texImage2D(context.TEXTURE_2D, 0, context.RGBA, context.RGBA, context.UNSIGNED_BYTE, img)
-      textures.set(slug, texture)
-      if (currentSlug === slug) context.bindTexture(context.TEXTURE_2D, texture)
-    }).catch(() => {})
+    img.src = work.image
+    img.decode().then(() => uploadTexture(slug, img)).catch(() => {})
   }
 
   const state = { alpha: 0, scale: 0.9 }
@@ -143,7 +204,7 @@ const initWebgl = () => {
 
   for (const row of document.querySelectorAll<HTMLElement>('.works-list .work-row')) {
     const slug = row.dataset.slug
-    if (!slug || !imageBySlug.has(slug)) continue
+    if (!slug || !workBySlug.has(slug)) continue
     const enter = () => {
       currentSlug = slug
       loadTexture(slug)
@@ -199,7 +260,7 @@ const initWebgl = () => {
 onMounted(async () => {
   const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (!fine || reduce || !imageBySlug.size) return
+  if (!fine || reduce) return
   enabled.value = true
   await nextTick()
   initWebgl()

@@ -26,6 +26,9 @@ const workMeta = computed(() => {
   return bySlug
 })
 
+const previewTitles = computed(() =>
+  Object.fromEntries([...workMeta.value.entries()].map(([slug, meta]) => [slug, meta.title])))
+
 usePageSeo({
   title: () => t('seo.title'),
   description: () => t('seo.description'),
@@ -462,7 +465,7 @@ useHead(() => ({
       </section>
     </main>
 
-    <WorksHoverPreview />
+    <WorksHoverPreview :titles="previewTitles" />
 
     <footer class="footer">
       <span>{{ currentYear }} Corentin Renard</span>
