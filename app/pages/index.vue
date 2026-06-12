@@ -119,7 +119,7 @@ const onMarqueeResize = () => {
 const buildHeroIntro = (scope: HTMLElement) => {
   const title = scope.querySelector<HTMLElement>('.hero-title')
   const textNode = title?.firstChild
-  if (!title || !textNode) return
+  if (!title || !textNode) return null
 
   const text = textNode.textContent ?? ''
   const range = document.createRange()
@@ -148,16 +148,22 @@ const buildHeroIntro = (scope: HTMLElement) => {
   }
 
   split.chars.forEach((char, i) => gsap.set(char, { color: introColors[i % introColors.length] }))
+  gsap.set(split.chars, { yPercent: 120 })
+  gsap.set('.hero-copy .section-kicker', { autoAlpha: 0, y: 14 })
+  gsap.set('.identity-panel', { autoAlpha: 0, y: 24 })
+  gsap.set(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16 })
 
-  const tl = gsap.timeline({ onComplete: () => split.revert() })
-  tl.from('.hero-copy .section-kicker', { autoAlpha: 0, y: 14, duration: 0.5, ease: 'power2.out' })
-  tl.from('.identity-panel', { autoAlpha: 0, y: 24, duration: 0.7, ease: 'power2.out' }, 0.2)
-  split.chars.forEach((char, i) => {
-    const at = 0.08 + i * 0.05
-    tl.from(char, { yPercent: 120, duration: 0.5, ease: 'power3.out' }, at)
-    tl.to(char, { color: baseColor, duration: 0.1, ease: 'none' }, at + 0.42)
-  })
-  tl.from(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 0, y: 16, duration: 0.6, ease: 'power2.out', stagger: 0.12 })
+  return () => {
+    const tl = gsap.timeline({ onComplete: () => split.revert() })
+    tl.to('.hero-copy .section-kicker', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' })
+    tl.to('.identity-panel', { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.2)
+    split.chars.forEach((char, i) => {
+      const at = 0.08 + i * 0.05
+      tl.to(char, { yPercent: 0, duration: 0.5, ease: 'power3.out' }, at)
+      tl.to(char, { color: baseColor, duration: 0.1, ease: 'none' }, at + 0.42)
+    })
+    tl.to(['.hero-role', '.hero-intro', '.hero-actions'], { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out', stagger: 0.12 })
+  }
 }
 
 watch(workDocs, () => nextTick(computeMarqueeCounts))
@@ -179,13 +185,19 @@ onMounted(async () => {
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   gsap.registerPlugin(ScrollTrigger, SplitText)
-  await whenAppLoaded()
   if (!pageEl.value) return
 
+  let playHeroIntro: (() => void) | null = null
   pageCtx = gsap.context(() => {
-    if (!localeSwitching.value) buildHeroIntro(pageEl.value!)
-    applyVelocitySkew(pageEl.value!, '.section-heading, .workflow-card, .pricing-card, .faq-item, .video-frame, .work-row')
+    if (!localeSwitching.value) playHeroIntro = buildHeroIntro(pageEl.value!)
   }, pageEl.value)
+
+  await whenAppLoaded()
+
+  pageCtx.add(() => {
+    playHeroIntro?.()
+    applyVelocitySkew(pageEl.value!, '.section-heading, .workflow-card, .pricing-card, .faq-item, .video-frame, .work-row')
+  })
 })
 
 onUnmounted(() => {

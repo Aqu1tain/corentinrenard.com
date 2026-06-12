@@ -58,13 +58,15 @@ onMounted(() => {
       overwrite: true,
       onUpdate: () => { progress.value = Math.round(state.value * 100) },
       onComplete: () => {
-        appLoaded.value = true
         gsap.to(loaderEl.value, {
           yPercent: -100,
           duration: 0.7,
           ease: 'power3.inOut',
           delay: 0.1,
-          onComplete: () => { visible.value = false },
+          onComplete: () => {
+            visible.value = false
+            appLoaded.value = true
+          },
         })
       },
     })
