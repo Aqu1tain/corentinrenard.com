@@ -114,7 +114,7 @@ onUnmounted(() => {
       </div>
     </header>
 
-    <div id="smooth-wrapper">
+    <div id="smooth-wrapper" class="smooth-wrapper">
       <div id="smooth-content">
         <slot />
       </div>
@@ -123,6 +123,10 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.smooth-wrapper {
+  overflow-x: clip;
+}
+
 .site-header {
   position: fixed;
   top: 1rem;
@@ -304,7 +308,7 @@ onUnmounted(() => {
   }
 }
 
-@media (max-width: 719px) {
+@media (max-width: 719.98px) {
   .site-header {
     right: 1rem;
     left: auto;

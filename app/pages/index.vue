@@ -282,7 +282,7 @@ useHead(() => ({
 <template>
   <div ref="pageEl">
     <main class="mx-auto max-w-6xl px-5 py-24 sm:px-8 sm:py-28">
-      <section class="hero-shell mb-28">
+      <section class="hero-shell">
         <div class="hero-copy">
           <p class="section-kicker">{{ t('hero.kicker') }}</p>
           <h1 class="hero-title">{{ t('name') }}</h1>
@@ -311,7 +311,7 @@ useHead(() => ({
               src="/apple-touch-icon.png"
               width="180"
               height="180"
-              sizes="sm:88px md:320px"
+              sizes="88px md:320px"
               alt="Corentin Renard"
               class="portrait"
               data-lag="0.15"
@@ -500,6 +500,7 @@ useHead(() => ({
 
 <style scoped>
 .hero-shell {
+  margin-bottom: 7rem;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
@@ -706,7 +707,6 @@ useHead(() => ({
 }
 
 .workflow-card {
-  min-height: 15rem;
   padding: 1.25rem;
   transition: border-color 0.2s ease;
 }
@@ -716,7 +716,7 @@ useHead(() => ({
 }
 
 .card-topline {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .card-topline > span {
@@ -914,21 +914,15 @@ useHead(() => ({
   font-family: var(--font-display), serif;
   font-size: clamp(3.5rem, 11vw, 8rem);
   line-height: 0.9;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .work-title-track {
-  display: inline-flex;
-  min-width: max-content;
-}
-
-.work-title-segment {
-  display: inline-block;
-  padding-right: 3rem;
+  display: block;
 }
 
 .work-title-segment + .work-title-segment {
-  visibility: hidden;
+  display: none;
 }
 
 .work-row-bottom {
@@ -959,6 +953,25 @@ useHead(() => ({
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .work-title {
+    white-space: nowrap;
+  }
+
+  .work-title-track {
+    display: inline-flex;
+    min-width: max-content;
+  }
+
+  .work-title-segment {
+    display: inline-block;
+    padding-right: 3rem;
+  }
+
+  .work-title-segment + .work-title-segment {
+    display: inline-block;
+    visibility: hidden;
+  }
+
   .work-row:hover .work-title-track {
     animation: title-marquee 8s linear infinite;
   }
@@ -983,6 +996,12 @@ useHead(() => ({
   padding: 2rem 1.25rem;
   color: var(--color-neutral-500);
   font-size: 0.875rem;
+}
+
+.footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
 }
 
 .footer a:hover {
@@ -1124,8 +1143,39 @@ useHead(() => ({
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .workflow-card {
+    min-height: 15rem;
+  }
+
+  .card-topline {
+    margin-bottom: 2.5rem;
+  }
+
   .works-heading {
     grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.42fr);
+  }
+}
+
+@media (max-width: 899px) {
+  .identity-panel {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+
+  .portrait-wrap {
+    border-radius: 0.8rem;
+  }
+
+  .social-grid {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr));
+    gap: 0.35rem;
+  }
+
+  .social-btn {
+    border-radius: 0.65rem;
   }
 }
 
@@ -1133,6 +1183,19 @@ useHead(() => ({
   .hero-shell {
     min-height: auto;
     align-items: start;
+    margin-bottom: 4.5rem;
+  }
+
+  .section-block {
+    margin-bottom: 4.5rem;
+  }
+
+  .compact-block {
+    margin-bottom: 4rem;
+  }
+
+  .faq-item p {
+    padding-right: 1rem;
   }
 
   .hero-title {
@@ -1148,27 +1211,6 @@ useHead(() => ({
     width: 100%;
   }
 
-  .identity-panel {
-    grid-template-columns: 5.5rem minmax(0, 1fr);
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem;
-  }
-
-  .portrait-wrap {
-    border-radius: 0.8rem;
-  }
-
-  .social-grid {
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 0.35rem;
-  }
-
-  .social-btn {
-    border-radius: 0.65rem;
-  }
-
   .section-heading h2 {
     font-size: 2.4rem;
   }
@@ -1176,21 +1218,6 @@ useHead(() => ({
   .work-title {
     font-size: clamp(3.2rem, 17vw, 5.2rem);
     line-height: 0.95;
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
-
-  .work-title-track {
-    display: block;
-    min-width: 0;
-  }
-
-  .work-title-segment {
-    padding-right: 0;
-  }
-
-  .work-title-segment + .work-title-segment {
-    display: none;
   }
 
   .work-row {

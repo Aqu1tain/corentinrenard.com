@@ -244,7 +244,8 @@ useHead(() => ({
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 2.5rem;
+  padding: 0.65rem 0.5rem;
+  margin: -0.65rem -0.5rem 1.85rem;
   color: var(--color-neutral-500);
   font-size: 0.9rem;
   font-weight: 700;
@@ -389,9 +390,12 @@ useHead(() => ({
 }
 
 .case-rail a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
   border: 1px solid var(--color-neutral-200);
   border-radius: 999px;
-  padding: 0.4rem 0.7rem;
+  padding: 0.55rem 0.85rem;
   transition: border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -543,7 +547,7 @@ useHead(() => ({
   }
 
   .back-link {
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.6rem;
   }
 
   .case-article {
@@ -570,7 +574,7 @@ useHead(() => ({
   }
 
   .case-media {
-    min-height: 14rem;
+    min-height: 0;
   }
 
   .case-prose :deep(h2:not(:first-child)) {
