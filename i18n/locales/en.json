@@ -113,5 +113,12 @@
   },
   "theme": {
     "toggle": "Change theme"
+  },
+  "error": {
+    "notFoundKicker": "Page not found",
+    "errorKicker": "Error",
+    "notFound": "This page doesn't exist, or it hides remarkably well. Even the capybara can't find it.",
+    "generic": "Something went wrong on our side. Head back home, we'll take care of the rest.",
+    "home": "Back to home"
   }
 }

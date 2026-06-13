@@ -113,5 +113,12 @@
   },
   "theme": {
     "toggle": "Changer de thème"
+  },
+  "error": {
+    "notFoundKicker": "Page introuvable",
+    "errorKicker": "Erreur",
+    "notFound": "Cette page n'existe pas, ou alors elle se cache très bien. Même le capybara ne la trouve pas.",
+    "generic": "Quelque chose s'est mal passé de notre côté. Revenez à l'accueil, on s'occupe du reste.",
+    "home": "Retour à l'accueil"
   }
 }
