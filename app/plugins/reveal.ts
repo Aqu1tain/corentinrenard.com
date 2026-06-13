@@ -34,17 +34,22 @@ export default defineNuxtPlugin((nuxtApp) => {
       gsap.set(el, { autoAlpha: 0, y: 20 })
       const arm = () => {
         if (!el.isConnected) return
+        const inView = el.getBoundingClientRect().top < window.innerHeight * 0.82
         tweens.set(el, gsap.to(el, {
           autoAlpha: 1,
           y: 0,
           duration: 0.55,
           delay: (binding.value ?? 0) / 1000,
           ease: 'power2.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'clamp(top 82%)',
-            once: true,
-          },
+          ...(inView
+            ? {}
+            : {
+                scrollTrigger: {
+                  trigger: el,
+                  start: 'clamp(top 82%)',
+                  once: true,
+                },
+              }),
         }))
       }
       if (appLoaded.value) arm()
