@@ -13,6 +13,16 @@ export interface WorkItem {
 
 export const workItems: WorkItem[] = [
   {
+    slug: 'anaginosko',
+    type: 'personal',
+    image: '/works/anaginosko.jpg',
+    url: 'https://anaginosko.fr',
+    accent: '#0d3b66',
+    year: '2026',
+    stack: ['Next.js', 'React', 'Azure Speech'],
+    published: true,
+  },
+  {
     slug: 'stremio-horizon',
     type: 'personal',
     image: '/works/stremio-horizon.jpg',
