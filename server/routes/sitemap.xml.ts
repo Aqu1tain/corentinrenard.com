@@ -2,8 +2,8 @@ import { SITE_URL } from '#shared/utils/site'
 import { publishedWorkItems } from '#shared/utils/works'
 
 const LOCALES = [
-  { code: 'en', prefix: '' },
-  { code: 'fr', prefix: '/fr' },
+  { code: 'fr', prefix: '' },
+  { code: 'en', prefix: '/en' },
 ] as const
 
 interface SitemapRoute {

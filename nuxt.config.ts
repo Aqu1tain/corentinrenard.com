@@ -42,30 +42,29 @@ export default defineNuxtConfig({
   i18n: {
     baseUrl: SITE_URL,
     locales: [
+      { code: 'fr', language: 'fr-FR', file: 'fr.json', name: 'Français' },
       { code: 'en', language: 'en-US', file: 'en.json', name: 'English' },
-      { code: 'fr', language: 'fr-FR', file: 'fr.json', name: 'Francais' },
     ],
-    defaultLocale: 'en',
+    defaultLocale: 'fr',
     langDir: 'locales',
     strategy: 'prefix_except_default',
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_redirected',
-      fallbackLocale: 'en',
-    },
+    // No browser-language redirect: pages are prerendered, and switching locale
+    // on the client before hydration left attributes (CV link, work links) in
+    // the prerendered language. The URL alone decides the language.
+    detectBrowserLanguage: false,
   },
 
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ['/', '/fr', '/sitemap.xml', '/robots.txt'],
+      routes: ['/', '/en', '/sitemap.xml', '/robots.txt'],
     },
   },
 
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
     head: {
-      htmlAttrs: { lang: 'en' },
+      htmlAttrs: { lang: 'fr' },
       titleTemplate: '%s | Corentin Renard',
       link: [
         { rel: 'icon', type: 'image/png', href: '/favicon-32x32.png' },
