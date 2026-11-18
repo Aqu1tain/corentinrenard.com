@@ -13,6 +13,16 @@ export interface WorkItem {
 
 export const workItems: WorkItem[] = [
   {
+    slug: 'chapitre-saint-lazare',
+    type: 'mission',
+    image: '/works/chapitre-saint-lazare.jpg',
+    url: 'https://chapitresaintlazare.com',
+    accent: '#061d4f',
+    year: '2026',
+    stack: ['UI/UX', 'Nuxt', 'Drizzle'],
+    published: true,
+  },
+  {
     slug: 'anaginosko',
     type: 'personal',
     image: '/works/anaginosko.jpg',
